@@ -1,3 +1,4 @@
+
 import { Application } from "@hotwired/stimulus"
 import { definitionsFromContext } from "@hotwired/stimulus-webpack-helpers"
 import * as Turbo from "@hotwired/turbo"
