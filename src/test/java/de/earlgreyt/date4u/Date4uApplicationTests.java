@@ -1,4 +1,4 @@
-package com.example.date4u;
+package de.earlgreyt.date4u;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

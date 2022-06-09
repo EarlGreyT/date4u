@@ -1,4 +1,4 @@
-package com.example.date4u;
+package de.earlgreyt.date4u;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
