@@ -1,7 +1,8 @@
 {
 	"scripts": {
 		"build": "webpack",
-		"genCSS": "postcss src/main/resources/static/css/style.tailwind.css -o target/classes/static/css/style.build.tailwind.css"
+		"genCSS": "postcss src/main/resources/static/css/style.tailwind.css -o src/main/resources/static/css/style.build.tailwind.css",
+		"watch:postcss": "postcss src/main/resources/static/css/style.tailwind.css -o src/main/resources/static/css/style.build.tailwind.css -w"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.18.2",
