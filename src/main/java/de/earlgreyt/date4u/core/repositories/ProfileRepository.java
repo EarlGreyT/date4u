@@ -1,7 +1,7 @@
 package de.earlgreyt.date4u.core.repositories;
 
-import com.tutego.date4u.core.entitybeans.Photo;
-import com.tutego.date4u.core.entitybeans.Profile;
+
+import de.earlgreyt.date4u.core.entitybeans.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

@@ -159,6 +159,14 @@ public class Profile {
         this.photos = photos;
     }
 
+    public Photo getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(Photo profilePic) {
+        this.profilePic = profilePic;
+    }
+
     @Override public boolean equals(Object o ) {
         return o instanceof Profile profile
                 && nickname.equals( profile.nickname );
