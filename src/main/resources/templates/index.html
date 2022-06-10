@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{css/style.build.tailwind.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+</head>
+<body class="container  min-h-screen bg-gradient-to-r from-indigo-500 via-violet-500 via-purple-500 via-fuchsia-500 to-red-500">
+
+<div class="grid  container grid-cols-12 grid-flow-col-dense grid-auto-cols-min py-20">
+    <turbo-frame id="nav" data-turbo-frame="content" data-turbo-action="replace">
+        <sideBar class="container grid fixed grid-cols-1 auto-rows-min mx-auto gap-y-1 left-5 top-[25%] text-3xl">
+            <a href="/matches">
+            <div class="sidebar-icon group">
+                 <i class="bi bi-arrow-through-heart"></i>
+                <span class="sidebar-tooltip group-hover:scale-100">Matching Unicorns</span>
+            </div>
+            </a>
+            <a href="/profile">
+            <div class="sidebar-icon group">
+                <i class="bi bi-journal-richtext"></i>
+                <span class="sidebar-tooltip group-hover:scale-100">Profile</span>
+            </div>
+            </a>
+            <a href="/search">
+            <div class="sidebar-icon group ">
+                <i class="bi bi-search-heart"></i>
+                <span class="sidebar-tooltip group-hover:scale-100">Search Unicorns</span>
+            </div>
+            </a>
+            <a href="/login">
+            <div class="sidebar-icon group">
+                <i class="bi bi-door-open"></i>
+                <span class="sidebar-tooltip group-hover:scale-100">Login. Or out, but why</span>
+            </div>
+            </a>
+        </sideBar>
+    </turbo-frame>
+
+    <main class="col-span-10 sm:col-span-11 left-5 px-10">
+        <div class="grid container px-5 grid-cols-1 sm:grid-cols-2 md:grid-cols-6 lg:grid-cols-12 mx-auto">
+            <turbo-frame id="content">
+
+
+            </turbo-frame>
+        </div>
+    </main>
+
+</div>
+</body>
+</html>

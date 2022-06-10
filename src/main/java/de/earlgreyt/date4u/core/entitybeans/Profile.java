@@ -33,7 +33,8 @@ public class Profile {
     private String description;
     private LocalDateTime lastseen;
 
-    @OneToOne(mappedBy = "isProfilePhoto")
+    @OneToOne(mappedBy = "isProfilePhoto", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "photo_id", unique = true)
     @JsonManagedReference
     private Photo profilePic;
     @OneToOne( mappedBy = "profile" )
@@ -47,6 +48,7 @@ public class Profile {
     )
     @JsonManagedReference
     private List<Photo> photos;
+
 
     protected Profile() {
     }
@@ -164,6 +166,8 @@ public class Profile {
     }
 
     public void setProfilePic(Photo profilePic) {
+        this.profilePic.setProfilePhoto(false);
+        profilePic.setProfilePhoto(true);
         this.profilePic = profilePic;
     }
 
