@@ -23,7 +23,6 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 
   @Query("SELECT p FROM Profile p WHERE p.nickname LIKE %:name%")
   List<Profile> findProfilesByContainingName(String name);
-
   @Modifying
   @Query("UPDATE Profile p SET p.lastseen =:lastseen WHERE p.id = :id")
   int updateLastSeen(long id, LocalDateTime lastseen);

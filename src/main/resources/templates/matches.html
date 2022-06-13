@@ -8,7 +8,7 @@
     <script th:src="@{/js/bundle.js}"></script>
 </head>
 <body class="container grid grid-cols-12 min-h-screen bg-gradient-to-r from-indigo-500 via-violet-500 via-purple-500 via-fuchsia-500 to-red-500">
-<turbo-frame id="nav" data-turbo-frame="content" >
+<turbo-frame id="nav" data-turbo-frame="content">
     <sideBar class="container grid fixed grid-cols-1 auto-rows-min mx-auto gap-y-1 left-5 top-[25%] text-3xl w-1/12">
         <a href="/matches" data-turbo-frame="content" data-turbo-action="replace">
             <div class="sidebar-icon group">
@@ -37,12 +37,12 @@
     </sideBar>
 </turbo-frame>
 <div class="container grid-cols-12 col-span-11 grid-flow-col-dense grid-auto-cols-min py-20">
-    <main class="col-span-10 sm:col-span-11 left-5 px-20 z-2">
-            <turbo-frame id="content" class="grid grid-cols-12 col-span-11 gap-2">
-        <div class="grid px-1 grid-cols-1 md:grid-cols-6 lg:grid-cols-12 mx-auto">
-
-        </div>
-            </turbo-frame>
+    <main class="left-5 px-20 z-2">
+        <turbo-frame class="grid grid-cols-12 col-span-11 gap-2" id="content">
+            <div  class="col-span-full  md:col-span-6 lg:col-span-3" th:each="likedProfile: ${likedProfiles}">
+                    <div class="" th:insert="profile/profileCard :: profileCard(${likedProfile.nickname}, ${likedProfile.profilePhotoName},${likedProfile.hornlength},${likedProfile.gender},${likedProfile.birthdate})"></div>
+            </div>
+        </turbo-frame>
     </main>
 
 </div>

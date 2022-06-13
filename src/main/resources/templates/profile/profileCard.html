@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<turbo-frame th:fragment="profileCard(nickname, profilePhotoName, hornlength, gender, birthdate)"
+             th:id="|profCard_${nickname}|"
+             class="flex flex-col rounded-xl overflow-clip bg-gray-800/40 mx-2 min-w-full">
+    <img class="object-cover"
+         th:src="@{/api/photo/{photoName}(photoName=${profilePhotoName})}">
+    <div class="rounded-md border-none outline-none">
+        <div
+             th:text="|Nickname ${nickname}|" th:id="|nickname_${nickname}|">
+        </div>
+        <div
+             th:text="|Hornlänge ${hornlength}|" th:id="|hornlength_${nickname}|">
+        </div>
+        <div
+             th:text="|Geschlecht ${gender}|" th:id="|gender_${nickname}|">
+        </div>
+        <div
+             th:text="|Geburtstag ${birthdate}|" th:id="|birthdate_${nickname}|">
+        </div>
+    </div>
+
+</turbo-frame>
+</body>
+</html>

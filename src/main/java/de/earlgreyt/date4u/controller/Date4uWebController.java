@@ -13,7 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class Date4uWebController {
@@ -28,34 +28,34 @@ public class Date4uWebController {
     public String indexPage(Model model) {
         return "index"; }
 
-
+    @RequestMapping("/matches")
+    public String matchesPage(Model model, Principal principal){
+        UnicornDetails unicornDetails = (UnicornDetails) unicornDetailService.loadUserByUsername(principal.getName());
+        Profile profile = unicornDetails.getProfile().get();
+        Set<Profile> profilesLikedByPrincipal = profile.getProfilesILike();
+        Set<ProfileFormData> profileFormDataSet = new HashSet<>();
+        for (Profile likedProfile : profilesLikedByPrincipal) {
+            profileFormDataSet.add(new ProfileFormData(likedProfile));
+        }
+        model.addAttribute("likedProfiles", profileFormDataSet);
+        return "matches";
+    }
 
 
     @RequestMapping( "/profile" )
     public String profilePage(Model model, Principal principal) {
-        UnicornDetails unicornDetails = (UnicornDetails) unicornDetailService.loadUserByUsername(principal.getName());
-        Profile profile = unicornDetails.getProfile().get();
-        Optional<Photo> optionalPhoto = profile.getProfilePic();
-        String profilePhotoName = "";
-        if (optionalPhoto.isPresent()){
-            profilePhotoName = optionalPhoto.get().getName();
-        }
-        ProfileFormData profileFormData = new ProfileFormData(
-                profile.getId(),
-                profile.getNickname(),
-                profile.getHornlength(),
-                profile.getGenderName(),
-                profilePhotoName,
-                profile.getBirthdate(),
-                profile.getDescription(),
-                profile.getPhotos()
-        );
-
+        ProfileFormData profileFormData = getProfileFormDataFromPrinciple(principal);
         model.addAttribute("profile", profileFormData);
-        return "profile";
+        return "profile/profile";
     }
     @RequestMapping("/profile/edit")
     public String editProfilePage(Model model, Principal principal){
+        ProfileFormData profileFormData = getProfileFormDataFromPrinciple(principal);
+        model.addAttribute("profile", profileFormData);
+        return "profile/profileEdit";
+    }
+
+    private ProfileFormData getProfileFormDataFromPrinciple(Principal principal) {
         UnicornDetails unicornDetails = (UnicornDetails) unicornDetailService.loadUserByUsername(principal.getName());
         Profile profile = unicornDetails.getProfile().get();
         Optional<Photo> optionalPhoto = profile.getProfilePic();
@@ -63,7 +63,7 @@ public class Date4uWebController {
         if (optionalPhoto.isPresent()){
             profilePhotoName = optionalPhoto.get().getName();
         }
-        ProfileFormData profileFormData = new ProfileFormData(
+        return new ProfileFormData(
                 profile.getId(),
                 profile.getNickname(),
                 profile.getHornlength(),
@@ -74,9 +74,8 @@ public class Date4uWebController {
                 profile.getPhotos()
         );
 
-        model.addAttribute("profile", profileFormData);
-        return "profileEdit";
     }
+
     private final Logger log = LoggerFactory.getLogger( getClass() );
 
     @PostMapping( "/save" )

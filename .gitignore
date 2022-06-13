@@ -42,3 +42,4 @@ build/
 /.mvn/wrapper/maven-wrapper.properties
 /src/main/resources/static/css/style.dev.tailwind.css
 /src/main/resources/static/css/style.build.tailwind.css
+/src/main/resources/static/js/bundle.js

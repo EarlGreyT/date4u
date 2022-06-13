@@ -1,9 +1,9 @@
 <!DOCTYPE html >
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
-<turbo-frame  id="content">
+<turbo-frame  id="content" class="grid grid-cols-12 col-span-11 gap-2">
 <form data-th-object="${profile}" data-th-action="@{/save}" method="post"
-      class="box-content py-5 px-5 bg-gray-800/30 grid px-1 sm:grid-cols-1 gap-2 lg:grid-cols-12 mx-auto auto-rows-min">
+      class="rounded-xl overflow-clip bg-gray-800/30 col-span-full grid content-start sm:grid-cols-1 gap-1 lg:gap-2 lg:grid-cols-12 mx-auto auto-rows-min">
     <img class="object-contain  sm:col-span-full lg:col-span-4 lg:row-span-4"
          th:src="@{/api/photo/{photoName}(photoName=${profile.profilePhotoName})}">
     <input type="text" data-th-field="*{id}" hidden>

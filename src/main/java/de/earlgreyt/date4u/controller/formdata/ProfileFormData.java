@@ -1,6 +1,7 @@
 package de.earlgreyt.date4u.controller.formdata;
 
 import de.earlgreyt.date4u.core.entitybeans.Photo;
+import de.earlgreyt.date4u.core.entitybeans.Profile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,11 +19,15 @@ public class ProfileFormData {
     private LocalDate birthdate;
     private String description;
     private LinkedList<String> photos = new LinkedList<>();
+
     public ProfileFormData() {
     }
 
-    public ProfileFormData(long id, String nickname,
-                           int hornlength, String gender, String profilePhotoName, LocalDate birthdate, String description, List<Photo> photos) {
+    public ProfileFormData(Profile profile) {
+        this(profile.getId(), profile.getNickname(), profile.getHornlength(), profile.getGenderName(), profile.getProfilePic().get().getName(), profile.getBirthdate(), profile.getDescription(), profile.getPhotos());
+    }
+
+    public ProfileFormData(long id, String nickname, int hornlength, String gender, String profilePhotoName, LocalDate birthdate, String description, List<Photo> photos) {
         this.id = id;
         this.nickname = nickname;
         this.hornlength = hornlength;
@@ -98,12 +103,7 @@ public class ProfileFormData {
 
     @Override
     public String toString() {
-        return "ProfileFormData{" +
-                "id=" + id +
-                ", nickname='" + nickname + '\'' +
-                ", hornlength=" + hornlength +
-                ", gender=" + gender +
-                '}';
+        return "ProfileFormData{" + "id=" + id + ", nickname='" + nickname + '\'' + ", hornlength=" + hornlength + ", gender=" + gender + '}';
     }
 
 }

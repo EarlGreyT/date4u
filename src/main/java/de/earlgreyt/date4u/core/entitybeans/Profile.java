@@ -12,12 +12,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 @Entity()
 @Access(AccessType.FIELD)
+@SecondaryTable(name = "likes", pkJoinColumns = @PrimaryKeyJoinColumn(name = "liker_fk"))
 public class Profile {
-
     public static final int FEE = 1;
     public static final int MAA = 2;
 
@@ -43,7 +44,19 @@ public class Profile {
     @OneToMany(mappedBy = "profile", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Photo> photos;
-
+    @ManyToMany
+    @JoinTable(
+            name = "likes",
+            joinColumns = @JoinColumn(name = "liker_fk"),
+            inverseJoinColumns = @JoinColumn(name = "likee_fk")
+    )
+    Set<Profile> profilesILike;
+    @ManyToMany
+    @JoinTable(name = "likes",
+            joinColumns = @JoinColumn(name = "likee_fk"),
+            inverseJoinColumns = @JoinColumn(name = "liker_fk")
+    )
+    Set<Profile> profilesThatLikeMe;
 
     protected Profile() {
     }
@@ -64,7 +77,7 @@ public class Profile {
     }
 
     public void updateProfilePicture(String photoName) {
-        if (photoName!=null && !photoName.equals("")) {
+        if (photoName != null && !photoName.equals("")) {
             photos.forEach(photo -> photo.setProfilePhoto(photo.getName().equals(photoName)));
         }
     }
@@ -162,33 +175,52 @@ public class Profile {
     }
 
     public void setProfilePic(String profilePicName) {
-        Optional<Photo> newProfilePic = photos.stream().filter(photo-> photo.getName().equals(profilePicName)).findAny();
-        newProfilePic.ifPresent( profilePhoto ->
-                {
-                this.getProfilePic().ifPresent(photo -> photo.setProfilePhoto(false));
-                profilePhoto.setProfilePhoto(true);
+        Optional<Photo> newProfilePic = photos.stream().filter(photo -> photo.getName().equals(profilePicName)).findAny();
+        newProfilePic.ifPresent(profilePhoto ->
+        {
+            this.getProfilePic().ifPresent(photo -> photo.setProfilePhoto(false));
+            profilePhoto.setProfilePhoto(true);
         });
     }
-    public void setGender(String genderName){
-        switch (genderName){
-            case "Male" -> setGender(1);
-            case "Female" -> setGender(2);
+
+    public void setGender(String genderName) {
+        switch (genderName) {
+            case "Male" -> setGender(2);
+            case "Female" -> setGender(1);
             default -> setGender(0);
         }
     }
-    public String getGenderName(){
-        switch (gender){
+
+    public String getGenderName() {
+        switch (gender) {
             case 1 -> {
-                return "Male";
-            }
-            case 2 ->{
                 return "Female";
+            }
+            case 2 -> {
+                return "Male";
             }
             default -> {
                 return "Non-Binary";
             }
         }
     }
+
+    public Set<Profile> getProfilesILike() {
+        return profilesILike;
+    }
+
+    public void setProfilesILike(Set<Profile> profilesILike) {
+        this.profilesILike = profilesILike;
+    }
+
+    public Set<Profile> getProfilesThatLikeMe() {
+        return profilesThatLikeMe;
+    }
+
+    public void setProfilesThatLikeMe(Set<Profile> profilesThatLikeMe) {
+        this.profilesThatLikeMe = profilesThatLikeMe;
+    }
+
     @Override
     public boolean equals(Object o) {
         return o instanceof Profile profile && nickname.equals(profile.nickname);
