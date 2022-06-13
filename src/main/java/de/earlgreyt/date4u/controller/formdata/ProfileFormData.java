@@ -1,7 +1,11 @@
 package de.earlgreyt.date4u.controller.formdata;
 
+import de.earlgreyt.date4u.core.entitybeans.Photo;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ProfileFormData {
 
@@ -9,20 +13,26 @@ public class ProfileFormData {
     private String nickname;
 
     private int hornlength;
-    private int gender;
+    private String gender;
     private String profilePhotoName;
-
-
+    private LocalDate birthdate;
+    private String description;
+    private LinkedList<String> photos = new LinkedList<>();
     public ProfileFormData() {
     }
 
     public ProfileFormData(long id, String nickname,
-                            int hornlength, int gender, String profilePhotoName) {
+                           int hornlength, String gender, String profilePhotoName, LocalDate birthdate, String description, List<Photo> photos) {
         this.id = id;
         this.nickname = nickname;
         this.hornlength = hornlength;
         this.gender = gender;
         this.profilePhotoName = profilePhotoName;
+        this.birthdate = birthdate;
+        this.description = description;
+        for (Photo photo : photos) {
+            this.photos.add(photo.getName());
+        }
     }
 
     public String getProfilePhotoName() {
@@ -53,11 +63,11 @@ public class ProfileFormData {
         this.hornlength = hornlength;
     }
 
-    public int getGender() {
+    public String getGender() {
         return gender;
     }
 
-    public void setGender(int gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 
@@ -65,6 +75,26 @@ public class ProfileFormData {
         this.id = id;
     }
     // + Setter + Getter + toString()
+
+    public LinkedList<String> getPhotos() {
+        return photos;
+    }
+
+    public LocalDate getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(LocalDate birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     @Override
     public String toString() {
@@ -75,4 +105,5 @@ public class ProfileFormData {
                 ", gender=" + gender +
                 '}';
     }
+
 }

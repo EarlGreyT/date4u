@@ -1,0 +1,73 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/style.build.tailwind.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+    <script th:src="@{/js/bundle.js}"></script>
+</head>
+<body class="container grid grid-cols-12 min-h-screen bg-gradient-to-r from-indigo-500 via-violet-500 via-purple-500 via-fuchsia-500 to-red-500">
+<turbo-frame id="nav" data-turbo-frame="content" data-turbo-action="replace">
+    <sideBar class="container grid fixed grid-cols-1 auto-rows-min mx-auto gap-y-1 left-5 top-[25%] text-3xl w-1/12">
+        <a href="/matches" data-turbo-frame="content" data-turbo-action="replace">
+            <div class="sidebar-icon group">
+                <i class="bi bi-arrow-through-heart"></i>
+                <span class="sidebar-tooltip group-hover:scale-100">Matching Unicorns</span>
+            </div>
+        </a>
+        <a href="/profile" data-turbo-frame="content" data-turbo-action="replace">
+            <div class="sidebar-icon group">
+                <i class="bi bi-journal-richtext"></i>
+                <span class="sidebar-tooltip group-hover:scale-100">Profile</span>
+            </div>
+        </a>
+        <a href="/search" data-turbo-frame="content" data-turbo-action="replace">
+            <div class="sidebar-icon group ">
+                <i class="bi bi-search-heart"></i>
+                <span class="sidebar-tooltip group-hover:scale-100">Search Unicorns</span>
+            </div>
+        </a>
+        <a href="/logout" data-turbo-frame="_top">
+            <div class="sidebar-icon group">
+                <i class="bi bi-door-open"></i>
+                <span class="sidebar-tooltip group-hover:scale-100">Logout, but why?</span>
+            </div>
+        </a>
+    </sideBar>
+</turbo-frame>
+<div class="grid  container  grid-cols-12 col-span-11 grid-auto-cols-min py-20">
+
+    <main class="col-span-10 left-5 px-20 z-2">
+        <turbo-frame id="content">
+            <div th:object="${profile}"
+                 class="py-5 px-5 bg-gray-800/30 grid content-start px-1 sm:grid-cols-1 gap-1 lg:gap-2 lg:grid-cols-12 mx-auto auto-rows-min">
+                <img class="object-contain  col-span-full lg:col-span-4 lg:row-span-4"
+                     th:src="@{/api/photo/{photoName}(photoName=${profile.profilePhotoName})}">
+                <div class=" rounded-md border-none outline-none h-min w-max col-start-1 lg:col-start-5"
+                     th:text="|Nickname *{nickname}|" id="nicknameInput">
+
+                </div>
+                <div class=" rounded-md border-none outline-none h-min w-max col-start-1  lg:col-start-5"
+                     th:text="|Hornlänge *{hornlength}|" id="hornlengthInput">
+                </div>
+                <div class=" rounded-md border-none outline-none h-min w-max col-start-1 lg:col-start-5"
+                     th:text="|Geschlecht *{gender}|" id="genderInput">
+                </div>
+                <div class=" rounded-md border-none outline-none h-min w-max col-start-1 lg:col-start-5"
+                     th:text="|Geburtstag *{birthdate}|" id="birthdateInput">
+                </div>
+                <div class="border-none outline-none w-max  col-start-1 col-span-full">
+                <textarea readonly th:name="description" th:text="*{description}" id="descriptionInput"
+                          class="resize-none box-content bg-transparent col-span-full h-max rounded-md border-none outline-none">
+                       </textarea>
+                </div>
+                <a class="app-button col-start-1" href="/profile/edit" data-turbo-frame="content">Edit</a>
+            </div>
+
+        </turbo-frame>
+    </main>
+
+</div>
+</body>
+</html>

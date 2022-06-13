@@ -1,0 +1,41 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<turbo-frame  id="content">
+<form data-th-object="${profile}" data-th-action="@{/save}" method="post"
+      class="box-content py-5 px-5 bg-gray-800/30 grid px-1 sm:grid-cols-1 gap-2 lg:grid-cols-12 mx-auto auto-rows-min">
+    <img class="object-contain  sm:col-span-full lg:col-span-4 lg:row-span-4"
+         th:src="@{/api/photo/{photoName}(photoName=${profile.profilePhotoName})}">
+    <input type="text" data-th-field="*{id}" hidden>
+    <div class="border-none outline-none w-max col-start-1  lg:col-start-5">
+        <label for="nicknameInput">Nickname</label>
+        <input type="text" data-th-field="*{nickname}" id="nicknameInput"
+               class="bg-gray-800/30 rounded-md border-none outline-none h-min w-max">
+    </div>
+    <div class="outline-none w-max col-start-1  lg:col-start-5">
+        <label for="hornlengthInput">Hornlänge</label>
+        <input type="text" data-th-field="*{hornlength}" id="hornlengthInput"
+               class="bg-gray-800/30 rounded-md border-none outline-none h-min w-max">
+    </div>
+    <div class="border-none outline-none w-max col-start-1 lg:col-start-5">
+        <label  for="genderInput">Geschlecht</label>
+        <input type="text" data-th-field="*{gender}" id="genderInput"
+               class="bg-gray-800/30 rounded-md border-none outline-none h-min w-max">
+    </div>
+    <div class="border-none outline-none w-max col-start-1 lg:col-start-5">
+        <label  for="birthdateInput">Geburtstag</label>
+        <input type="text" data-th-field="*{birthdate}" id="birthdateInput"
+               class="bg-gray-800/30 rounded-md border-none outline-none h-min w-max">
+    </div>
+
+    <div class="object-contain border-none outline-none w-max  col-start-1 col-span-full">
+        <label for="descriptionInput">Description <br></label>
+        <textarea th:name="description" th:field="*{description}" id="descriptionInput"
+                  class="resize-none box-content  bg-gray-800/30 rounded-md border-none outline-none w-max"></textarea>
+    </div>
+
+    <button type="submit" class="app-button col-start-1">Speichern</button>
+</form>
+</turbo-frame>
+</body>
+</html>

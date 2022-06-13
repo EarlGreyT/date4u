@@ -17,3 +17,12 @@
     text-xs font-bold
     transition-all duration-100 scale-0 origin-left;
 }
+.app-button {
+    @apply relative flex items-center justify-center
+    h-12 w-32 mt-2 mb-2 shadow-lg
+    bg-gray-800/75 text-red-400
+    hover:text-green-500
+    rounded-xl hover:rounded-lg
+    transition-all duration-300 ease-linear
+    cursor-pointer;
+}

@@ -27,7 +27,6 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
   @Modifying
   @Query("UPDATE Profile p SET p.lastseen =:lastseen WHERE p.id = :id")
   int updateLastSeen(long id, LocalDateTime lastseen);
-
   @Query("SELECT p.id as id, p.nickname as nickname FROM Profile p WHERE id=:k")
   Map<String, Object> findSimplifiedProfile(long k);
 

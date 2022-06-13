@@ -19,7 +19,9 @@ public class Unicorn {
     @JoinColumn( name = "profile_fk" )
     @JsonBackReference
     private Profile profile;
-
+    public Unicorn (String email){
+        this.email = email;
+    }
     public Unicorn() {}
 
     public String getEmail() {
