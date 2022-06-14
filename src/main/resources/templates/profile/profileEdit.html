@@ -1,28 +1,28 @@
 <!DOCTYPE html >
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
-<turbo-frame  id="content" class="grid grid-cols-1 lg:grid-cols-12 col-span-11 gap-2">
+<turbo-frame  id="profile" class="grid grid-cols-1 col-span-full max-w-[575px] md:col-span-8 md:grid-cols-12 gap-2">
 <form th:object="${profile}" th:action="@{/save}" method="post"
-      class="rounded-xl overflow-clip bg-gray-800/30 col-span-full grid content-start sm:grid-cols-1 gap-1 lg:col-span-6 lg:grid-cols-12 mx-auto auto-rows-min">
-    <img class="object-fill  col-span-full lg:col-span-3 lg:row-span-3"
+      class="rounded-xl overflow-clip bg-gray-800/30 col-span-full grid content-start grid-cols-1 gap-1 md:grid-cols-12 mx-auto auto-rows-min">
+    <img class="object-cover col-span-full md:col-span-3 md:row-span-3"
          th:src="@{/api/photo/{photoName}(photoName=${profile.profilePhotoName})}">
     <input type="text" th:field="*{id}" hidden>
-    <div class="border-none outline-none w-max col-start-1  lg:col-start-4">
+    <div class="border-none outline-none w-max col-start-1  md:col-start-4">
         <label for="nicknameInput">Nickname</label>
         <input type="text" th:field="*{nickname}" id="nicknameInput"
                class="bg-gray-800/30 rounded-md border-none outline-none h-min w-max">
     </div>
-    <div class="outline-none w-max col-start-1  lg:col-start-4">
+    <div class="outline-none w-max col-start-1  md:col-start-4">
         <label for="hornlengthInput">Hornlänge</label>
         <input type="text" th:field="*{hornlength}" id="hornlengthInput"
                class="bg-gray-800/30 rounded-md border-none outline-none h-min w-max">
     </div>
-    <div class="border-none outline-none w-max col-start-1 lg:col-start-4">
+    <div class="border-none outline-none w-max col-start-1 md:col-start-4">
         <label  for="genderInput">Geschlecht</label>
         <input type="text" th:field="*{gender}" id="genderInput"
                class="bg-gray-800/30 rounded-md border-none outline-none h-min w-max">
     </div>
-    <div class="border-none outline-none w-max col-start-1 lg:col-start-4">
+    <div class="border-none outline-none w-max col-start-1 md:col-start-4">
         <label  for="birthdateInput">Geburtstag</label>
         <input type="date" th:field="${{profile.birthdate}}" id="birthdateInput"
                class="bg-gray-800/30 rounded-md border-none outline-none h-min w-max">
@@ -33,7 +33,6 @@
         <textarea th:name="description" th:field="*{description}" id="descriptionInput"
                   class="resize-none box-content  bg-gray-800/30 rounded-md border-none outline-none w-max"></textarea>
     </div>
-
     <button type="submit" class="app-button col-start-1 m-2">Speichern</button>
 </form>
 </turbo-frame>

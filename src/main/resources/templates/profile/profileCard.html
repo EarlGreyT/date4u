@@ -8,7 +8,7 @@
 
 <turbo-frame th:fragment="profileCard(nickname, profilePhotoName, hornlength, gender, birthdate)"
              th:id="|profCard_${nickname}|"
-             class="flex flex-col flex-initial rounded-xl overflow-clip bg-gray-800/40 mx-2 w-full max-w-[265px] group" loading="lazy">
+             class="flex flex-col flex-initial rounded-xl overflow-clip bg-gray-800/40 mx-2 w-full max-w-[265px] group shadow-sm" loading="lazy">
     <img class="object-fill"
          th:src="@{/api/thumb/{photoName}(photoName=${profilePhotoName})}" lazy="true">
     <div class="rounded-md border-none outline-none">
