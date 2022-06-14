@@ -1,13 +1,14 @@
 module.exports = {
   mode: process.env.NODE_ENV ? 'jit' : undefined,
-  purge: ["./src/**/*.html"],
-  darkMode: false, // or 'media' or 'class'
+  content: ["./src/**/*.html"],
+  darkMode: 'media', // or 'media' or 'class'
   theme: {
-    extend: {},
-  },
-  
-  variants: {
-    extend: {},
+
+    extend: {
+        fontSize:{
+            'xxs':'.70rem'
+        }
+    },
   },
    plugins: [
     require('@tailwindcss/forms')

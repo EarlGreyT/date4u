@@ -45,4 +45,16 @@ public class PhotoRestController {
         }
         return photo;
     }
+    @GetMapping( path     = "/api/thumb/{photoName}",
+            produces = MediaType.IMAGE_JPEG_VALUE )
+    public byte[] getThumbPhoto(@PathVariable String photoName) throws IOException {
+        Optional<byte[]> optionalBytes = photoService.download(photoName+"-thumb");
+        byte[] photo;
+        if (optionalBytes.isPresent()){
+            photo = optionalBytes.get();
+        } else {
+            return getPhoto(photoName);
+        }
+        return photo;
+    }
 }

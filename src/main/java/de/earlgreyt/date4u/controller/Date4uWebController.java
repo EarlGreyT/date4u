@@ -43,7 +43,19 @@ public class Date4uWebController {
         return "matches";
     }
 
+    @RequestMapping("/matches/{nickname}/description")
+    public String matchDescription(@PathVariable String nickname, Model model){
+        String matchDescription;
+        model.addAttribute("nickname", nickname);
+        Optional<Profile> matchProfile = profileRepository.findProfileByNickname(nickname);
+        if (matchProfile.isPresent()){
+            model.addAttribute("description", matchProfile.get().getDescription());
 
+        } else {
+            model.addAttribute("description","");
+        }
+        return "profile/descriptionBubble";
+    }
     @RequestMapping( "/profile" )
     public String profilePage(Model model, Principal principal) {
         ProfileFormData profileFormData = getProfileFormDataFromPrinciple(principal);

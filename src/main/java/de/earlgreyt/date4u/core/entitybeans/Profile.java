@@ -2,6 +2,7 @@ package de.earlgreyt.date4u.core.entitybeans;
 
 import javax.persistence.CascadeType;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
@@ -45,18 +46,20 @@ public class Profile {
     @OneToMany(mappedBy = "profile", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Photo> photos;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "likes",
             joinColumns = @JoinColumn(name = "liker_fk"),
             inverseJoinColumns = @JoinColumn(name = "likee_fk")
     )
+    @JsonBackReference
     Set<Profile> profilesILike;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "likes",
             joinColumns = @JoinColumn(name = "likee_fk"),
             inverseJoinColumns = @JoinColumn(name = "liker_fk")
     )
+    @JsonBackReference
     Set<Profile> profilesThatLikeMe;
 
     protected Profile() {

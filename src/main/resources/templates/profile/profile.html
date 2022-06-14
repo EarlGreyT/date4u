@@ -39,22 +39,22 @@
 <div class="grid-cols-12 col-span-11 grid-auto-cols-min py-20">
 
     <main class="col-span-10 left-5 px-20 z-2">
-        <turbo-frame id="content" class="grid grid-cols-12 col-span-11 gap-2">
+        <turbo-frame id="content" class="grid grid-cols-1 lg:grid-cols-12 col-span-11 gap-2">
             <div th:object="${profile}"
-                 class="rounded-xl overflow-clip bg-gray-800/30 col-span-full grid content-start sm:grid-cols-1 gap-1 lg:gap-2 lg:grid-cols-12 mx-auto auto-rows-min">
-                <img class="object-contain  col-span-full lg:col-span-4 lg:row-span-4"
+                 class="rounded-xl overflow-clip bg-gray-800/30 col-span-full grid content-start sm:grid-cols-1 gap-1 lg:col-span-6 lg:grid-cols-12 mx-auto auto-rows-min">
+                <img class="object-fill  col-span-full lg:col-span-3 lg:row-span-3"
                      th:src="@{/api/photo/{photoName}(photoName=${profile.profilePhotoName})}">
-                <div class=" rounded-md border-none outline-none h-min w-max col-start-1 lg:col-start-5"
+                <div class=" rounded-md border-none outline-none h-min w-max col-start-1 lg:col-start-4"
                      th:text="|Nickname *{nickname}|" id="nicknameInput">
 
                 </div>
-                <div class=" rounded-md border-none outline-none h-min w-max col-start-1  lg:col-start-5"
+                <div class=" rounded-md border-none outline-none h-min w-max col-start-1  lg:col-start-4"
                      th:text="|Hornlänge *{hornlength}|" id="hornlengthInput">
                 </div>
-                <div class=" rounded-md border-none outline-none h-min w-max col-start-1 lg:col-start-5"
+                <div class=" rounded-md border-none outline-none h-min w-max col-start-1 lg:col-start-4"
                      th:text="|Geschlecht *{gender}|" id="genderInput">
                 </div>
-                <div class=" rounded-md border-none outline-none h-min w-max col-start-1 lg:col-start-5"
+                <div class=" rounded-md border-none outline-none h-min w-max col-start-1 lg:col-start-4"
                      th:text="|Geburtstag *{#temporals.format(birthdate)}|" id="birthdateInput">
                 </div>
                 <div class="border-none outline-none w-max  col-start-1 col-span-full">
@@ -62,7 +62,7 @@
                           class="resize-none box-content bg-transparent col-span-full h-max rounded-md border-none outline-none">
                        </textarea>
                 </div>
-                <a class="app-button col-start-1" href="/profile/edit" data-turbo-frame="content">Edit</a>
+                <a class="app-button col-start-1 m-2" href="/profile/edit" data-turbo-frame="content">Edit</a>
             </div>
         </turbo-frame>
     </main>
