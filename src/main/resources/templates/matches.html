@@ -39,7 +39,7 @@
 <div class="container grid-cols-12 col-span-11 grid-flow-col-dense grid-auto-cols-min py-20">
     <main class="left-5 px-20 z-2">
         <turbo-frame class="grid grid-cols-12 col-span-11 gap-2" id="content">
-            <div  class="col-span-full  md:col-span-6 lg:col-span-3" th:each="likedProfile: ${likedProfiles}">
+            <div  class="flex justify-center col-span-full  md:col-span-6 lg:col-span-3" th:each="likedProfile: ${likedProfiles}">
                     <div class="" th:insert="profile/profileCard :: profileCard(${likedProfile.nickname}, ${likedProfile.profilePhotoName},${likedProfile.hornlength},${likedProfile.gender},${likedProfile.birthdate})"></div>
             </div>
         </turbo-frame>

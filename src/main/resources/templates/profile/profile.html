@@ -55,7 +55,7 @@
                      th:text="|Geschlecht *{gender}|" id="genderInput">
                 </div>
                 <div class=" rounded-md border-none outline-none h-min w-max col-start-1 lg:col-start-5"
-                     th:text="|Geburtstag *{birthdate}|" id="birthdateInput">
+                     th:text="|Geburtstag *{#temporals.format(birthdate)}|" id="birthdateInput">
                 </div>
                 <div class="border-none outline-none w-max  col-start-1 col-span-full">
                 <textarea readonly th:name="description" th:text="*{description}" id="descriptionInput"

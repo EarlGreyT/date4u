@@ -32,9 +32,11 @@ public class Date4uWebController {
     public String matchesPage(Model model, Principal principal){
         UnicornDetails unicornDetails = (UnicornDetails) unicornDetailService.loadUserByUsername(principal.getName());
         Profile profile = unicornDetails.getProfile().get();
-        Set<Profile> profilesLikedByPrincipal = profile.getProfilesILike();
+        Set<Profile> matchSet = profile.getProfilesILike();
+        Set<Profile> profilesThatLikePrincipal = profile.getProfilesThatLikeMe();
         Set<ProfileFormData> profileFormDataSet = new HashSet<>();
-        for (Profile likedProfile : profilesLikedByPrincipal) {
+        matchSet.retainAll(profilesThatLikePrincipal);
+        for (Profile likedProfile : matchSet) {
             profileFormDataSet.add(new ProfileFormData(likedProfile));
         }
         model.addAttribute("likedProfiles", profileFormDataSet);

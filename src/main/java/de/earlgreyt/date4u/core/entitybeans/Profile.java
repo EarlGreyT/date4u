@@ -3,6 +3,7 @@ package de.earlgreyt.date4u.core.entitybeans;
 import javax.persistence.CascadeType;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
