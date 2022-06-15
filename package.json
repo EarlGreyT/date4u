@@ -24,6 +24,7 @@
 	"dependencies": {
 		"@hotwired/stimulus": "^3.0.1",
 		"@hotwired/stimulus-webpack-helpers": "^1.0.1",
-		"@hotwired/turbo": "^7.1.0"
+		"@hotwired/turbo": "^7.1.0",
+		"swiper": "^8.2.4"
 	}
 }

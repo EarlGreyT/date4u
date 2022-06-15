@@ -8,7 +8,7 @@
 
 <turbo-frame th:fragment="profileCard(nickname, profilePhotoName, hornlength, gender, birthdate)"
              th:id="|profCard_${nickname}|"
-             class="flex flex-col flex-initial rounded-xl overflow-clip bg-gray-800/40 mx-2 w-full max-w-[265px] group shadow-sm" loading="lazy">
+             class="flex flex-col flex-initial rounded-xl overflow-clip bg-gray-800/40 mx-2 w-full max-w-[265px] shadow-sm relative group" loading="lazy">
     <img class="object-fill"
          th:src="@{/api/thumb/{photoName}(photoName=${profilePhotoName})}" lazy="true">
     <div class="rounded-md border-none outline-none">
@@ -25,7 +25,6 @@
              th:text="|Geburtstag *{#temporals.format(birthdate)}|" th:id="|birthdate_${nickname}|">
         </div>
     </div>
-    <turbo-frame th:src="|/matches/${nickname}/description|" loading="lazy" th:id="|descriptionBubble_${nickname}|" class="w-auto"></turbo-frame>
 </turbo-frame>
 </body>
 </html>

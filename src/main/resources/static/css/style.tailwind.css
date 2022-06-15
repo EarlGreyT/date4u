@@ -18,7 +18,7 @@
     transition-all duration-100 scale-0 origin-left;
 }
 .description-tooltip {
-    @apply p-2 m-2 min-w-max w-auto left-11
+    @apply absolute p-2 m-2 min-w-max w-auto -bottom-11
     rounded shadow-md
     text-white bg-gray-900/50
     text-xs font-bold
@@ -33,3 +33,9 @@
     transition-all duration-300 ease-linear
     cursor-pointer;
 }
+.swiperbutton{
+    @apply invisible
+    transition-all duration-100
+}
+
+
