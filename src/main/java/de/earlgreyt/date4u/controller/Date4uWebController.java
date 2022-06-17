@@ -1,5 +1,6 @@
 package de.earlgreyt.date4u.controller;
 
+import de.earlgreyt.date4u.controller.events.ProfileUpdateEvent;
 import de.earlgreyt.date4u.controller.formdata.ProfileFormData;
 import de.earlgreyt.date4u.core.UnicornDetailService;
 import de.earlgreyt.date4u.core.UnicornDetails;
@@ -8,10 +9,18 @@ import de.earlgreyt.date4u.core.entitybeans.Profile;
 import de.earlgreyt.date4u.core.repositories.ProfileRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
+import org.springframework.http.MediaType;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.*;
 
@@ -19,9 +28,12 @@ import java.util.*;
 public class Date4uWebController {
     private final ProfileRepository profileRepository;
     private final UnicornDetailService unicornDetailService;
-    public Date4uWebController(ProfileRepository profileRepository, UnicornDetailService unicornDetailService) {
+    private final ApplicationEventPublisher applicationEventPublisher;
+
+    public Date4uWebController(ProfileRepository profileRepository, UnicornDetailService unicornDetailService, ApplicationEventPublisher applicationEventPublisher, TemplateEngine templateEngine) {
         this.profileRepository = profileRepository;
         this.unicornDetailService = unicornDetailService;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @RequestMapping( "/*" )
@@ -36,6 +48,7 @@ public class Date4uWebController {
         Set<Profile> profilesThatLikePrincipal = profile.getProfilesThatLikeMe();
         Set<ProfileFormData> profileFormDataSet = new HashSet<>();
         matchSet.retainAll(profilesThatLikePrincipal);
+        matchSet.add(profile);
         for (Profile likedProfile : matchSet) {
             profileFormDataSet.add(new ProfileFormData(likedProfile));
         }
@@ -61,6 +74,10 @@ public class Date4uWebController {
         ProfileFormData profileFormData = getProfileFormDataFromPrinciple(principal);
         model.addAttribute("profile", profileFormData);
         return "profile/profile";
+    }
+    public String profileCardGen(Model model, ProfileFormData profileFormData) {
+        model.addAttribute("profile", profileFormData);
+        return "profile/profileCard";
     }
     @RequestMapping("/profile/edit")
     public String editProfilePage(Model model, Principal principal){
@@ -107,13 +124,16 @@ public class Date4uWebController {
                     profileRepository.save(realProfile);
                 }
             });
-
+        ProfileUpdateEvent profileUpdateEvent = new ProfileUpdateEvent(this, profile);
+        applicationEventPublisher.publishEvent(profileUpdateEvent);
         return "redirect:/profile/";
     }
     @RequestMapping( "/search" )
     public String searchPage(Model model) {
         model.addAttribute("profiles", profileRepository.findAll());
         return "search"; }
+
+
 
 
 }

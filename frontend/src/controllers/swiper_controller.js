@@ -12,7 +12,6 @@ export default class extends Controller {
     }
 
     connect() {
-        console.log(this.perviewValue)
         this.swiper = new Swiper(this.containerTarget, {
             lazy: this.lazyValue,
             slidesPerView: this.perviewValue,

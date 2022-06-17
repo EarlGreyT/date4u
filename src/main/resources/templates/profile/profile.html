@@ -63,7 +63,7 @@
             <a class="app-button col-start-1 m-2" href="/profile/edit">Edit</a>
         </div>
     </turbo-frame>
-    <div class="col-span-full md:col-span-4 md:col-start-4" data-controller="swiper">
+    <div class="col-span-full md:col-span-4 md:col-start-4" data-controller="swiper" data-swiper-perview-value=3>
         <div class="swiper group" data-swiper-target="container">
             <div class="swiper-wrapper">
                 <div th:each="photo: ${profile.photos}" class="swiper-slide flex justify-center content-center">

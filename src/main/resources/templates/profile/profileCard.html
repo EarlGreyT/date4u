@@ -1,16 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
 
 <turbo-frame th:fragment="profileCard(nickname, profilePhotoName, hornlength, gender, birthdate)"
              th:id="|profCard_${nickname}|"
              class="flex flex-col flex-initial rounded-xl overflow-clip bg-gray-800/40 mx-2 w-full max-w-[265px] shadow-sm relative group" loading="lazy">
     <img class="object-fill"
-         th:src="@{/api/thumb/{photoName}(photoName=${profilePhotoName})}" lazy="true">
+         th:src="|/api/thumb/${profilePhotoName}|" lazy="true">
     <div class="rounded-md border-none outline-none">
         <div
              th:text="|${nickname}|" th:id="|nickname_${nickname}|">
@@ -26,5 +19,3 @@
         </div>
     </div>
 </turbo-frame>
-</body>
-</html>
