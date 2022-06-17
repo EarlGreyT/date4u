@@ -30,7 +30,7 @@ public class SSEController {
     public SseEmitter handle(Principal principal) {
         if (emitterList.get(principal.getName()) == null) {
             SseEmitter emitter = new SseEmitter();
-            emitter.onCompletion(() -> emitterList.put(principal.getName(),null));
+            emitter.onCompletion(() -> emitterList.remove(principal.getName()));
             emitterList.put(principal.getName(),emitter );
         }
         return emitterList.get(principal.getName());
@@ -59,7 +59,7 @@ public class SSEController {
         profileCard.setVariable("profilePhotoName",profileFormData.getProfilePhotoName());
         String profileCardString =  templateEngine.process("profile/profileCard.html",profileCard);
         String html = "<turbo-stream action=\"replace\" target=\"profCard_"+profileFormData.getNickname()+"\">"+"<template>"+profileCardString+"</template></turbo-stream>";
-        html = html.replace("\n","").replace("\r","");
+        html = html.replace("\n","").replace("\r",""); //payload of sse must not have multiple lines
         return html;
     }
 }
