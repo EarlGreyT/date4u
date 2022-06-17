@@ -1,8 +1,8 @@
 import {Controller} from "@hotwired/stimulus";
 export default class extends Controller{
-    static targets = ["pic"];
+    static targets = ["pic","picname"];
 
     updateProfilepic(event){
-        console.log(event.target.dataset.hash);
+        this.picnameTarget.value=event.detail.content;
     }
 }

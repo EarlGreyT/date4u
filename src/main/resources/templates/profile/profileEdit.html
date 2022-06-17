@@ -2,13 +2,13 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
 <turbo-frame  id="profile" class=" col-start-1 grid grid-cols-1 col-span-full max-w-[575px] lg:col-span-8 md:grid-cols-12 gap-2">
-<form th:object="${profile}" th:action="@{/save}" method="post"
+<form th:object="${profile}" th:action="@{/save}" method="post" data-controller="profilepic"
       class="rounded-xl overflow-clip bg-gray-800/30 col-span-full grid content-start grid-cols-1 gap-1 md:grid-cols-12 mx-auto auto-rows-min">
-    <div class="object-cover col-span-full md:col-span-3 md:row-span-3" data-controller="swiper profilepic" th:data-swiper-starthash-value="*{profilePhotoName}">
+    <div class="object-cover col-span-full md:col-span-3 md:row-span-3" data-controller="swiper" data-action="swiper:picUpdate->profilepic#updateProfilepic" th:data-swiper-starthash-value="*{profilePhotoName}">
         <div class="swiper group" data-swiper-target="container">
             <div class="swiper-wrapper">
                 <div th:each="photo: ${profile.photos}" class="swiper-slide flex justify-center content-center">
-                    <img data-profilepic-target="pic" data-action="click->profilepic#updateProfilepic" th:data-hash="${photo}" th:data-src="@{/api/photo/{photoName}(photoName=${photo})}" class="swiper-lazy">
+                    <img data-profilepic-target="pic"  th:data-hash="${photo}" th:data-src="@{/api/photo/{photoName}(photoName=${photo})}" class="swiper-lazy">
                     <div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
                 </div>
             </div>
@@ -24,6 +24,8 @@
         <input type="text" th:field="*{nickname}" id="nicknameInput"
                class="bg-gray-800/30 rounded-md border-none outline-none h-min w-max" required>
     </div>
+    <input type="text" th:field="*{id}" hidden>
+
     <div class="outline-none w-max col-start-1  md:col-start-4">
         <label for="hornlengthInput">Hornlänge</label>
         <input type="text" th:field="*{hornlength}" id="hornlengthInput"
@@ -44,6 +46,10 @@
         <label for="descriptionInput">Description <br></label>
         <textarea th:name="description" th:field="*{description}" id="descriptionInput"
                   class="resize-none box-content  bg-gray-800/30 rounded-md border-none outline-none w-max" required></textarea>
+    </div>
+    <div class="border-none outline-none w-max col-start-1  md:col-start-4">
+        <input type="text" th:field="*{profilePhotoName}" id="picnameInput"
+               class="fixed scale-0" required th:data-profilepic-target="picname">
     </div>
     <button type="submit" class="app-button col-start-1 m-2">Speichern</button>
 </form>

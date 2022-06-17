@@ -34,5 +34,11 @@ export default class extends Controller {
             let startIndex = this.swiper.slides.findIndex(slide => slide.children[0].dataset.hash === this.starthashValue);
             this.swiper.slideTo(startIndex,0)
         }
+        this.swiper.on('slideChange', event => this.dispatch('picUpdate',
+        {detail:
+            {content:
+                this.swiper.slides[event.activeIndex].children[0].dataset.hash
+            }
+        }))
     }
 }
