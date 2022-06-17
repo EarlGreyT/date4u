@@ -30,7 +30,7 @@ public class SSEController {
     public SseEmitter handle(Principal principal) {
         if (emitterList.get(principal.getName()) == null) {
             SseEmitter emitter = new SseEmitter();
-            emitter.onCompletion(() -> emitterList.remove(principal.getName()));
+            emitter.onCompletion(() -> emitterList.remove(principal.getName())); //is this necessary?
             emitterList.put(principal.getName(),emitter );
         }
         return emitterList.get(principal.getName());
