@@ -1,7 +1,7 @@
-package de.earlgreyt.date4u.controller;
+package de.earlgreyt.date4u.core.controller;
 
-import de.earlgreyt.date4u.controller.events.ProfileUpdateEvent;
-import de.earlgreyt.date4u.controller.formdata.ProfileFormData;
+import de.earlgreyt.date4u.core.controller.events.ProfileUpdateEvent;
+import de.earlgreyt.date4u.core.controller.formdata.ProfileFormData;
 import de.earlgreyt.date4u.core.UnicornDetailService;
 import de.earlgreyt.date4u.core.UnicornDetails;
 import de.earlgreyt.date4u.core.entitybeans.Photo;
@@ -10,15 +10,12 @@ import de.earlgreyt.date4u.core.repositories.ProfileRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.event.EventListener;
-import org.springframework.http.MediaType;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -48,7 +45,6 @@ public class Date4uWebController {
         Set<Profile> profilesThatLikePrincipal = profile.getProfilesThatLikeMe();
         Set<ProfileFormData> profileFormDataSet = new HashSet<>();
         matchSet.retainAll(profilesThatLikePrincipal);
-        matchSet.add(profile);
         for (Profile likedProfile : matchSet) {
             profileFormDataSet.add(new ProfileFormData(likedProfile));
         }

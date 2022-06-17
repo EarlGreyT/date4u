@@ -5,16 +5,16 @@
 <form th:object="${profile}" th:action="@{/save}" method="post" data-controller="profilepic"
       class="rounded-xl overflow-clip bg-gray-800/30 col-span-full grid content-start grid-cols-1 gap-1 md:grid-cols-12 mx-auto auto-rows-min">
     <div class="object-cover col-span-full md:col-span-3 md:row-span-3" data-controller="swiper" data-action="swiper:picUpdate->profilepic#updateProfilepic" th:data-swiper-starthash-value="*{profilePhotoName}">
-        <div class="swiper group" data-swiper-target="container">
+        <div class="swiper" data-swiper-target="container">
             <div class="swiper-wrapper">
                 <div th:each="photo: ${profile.photos}" class="swiper-slide flex justify-center content-center">
                     <img data-profilepic-target="pic"  th:data-hash="${photo}" th:data-src="@{/api/photo/{photoName}(photoName=${photo})}" class="swiper-lazy">
                     <div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
                 </div>
             </div>
-            <div class="swiper-button-prev swiperbutton group-hover:visible" data-swiper-target="prev">
+            <div class="swiper-button-prev" data-swiper-target="prev">
             </div>
-            <div class="swiper-button-next swiperbutton group-hover:visible" data-swiper-target="next">
+            <div class="swiper-button-next" data-swiper-target="next">
             </div>
         </div>
     </div>

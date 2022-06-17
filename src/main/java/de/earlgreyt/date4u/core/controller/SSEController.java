@@ -1,8 +1,7 @@
-package de.earlgreyt.date4u.controller;
+package de.earlgreyt.date4u.core.controller;
 
-import de.earlgreyt.date4u.controller.events.ProfileUpdateEvent;
-import de.earlgreyt.date4u.controller.formdata.ProfileFormData;
-import de.earlgreyt.date4u.core.UnicornDetailService;
+import de.earlgreyt.date4u.core.controller.events.ProfileUpdateEvent;
+import de.earlgreyt.date4u.core.controller.formdata.ProfileFormData;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
@@ -32,7 +31,6 @@ public class SSEController {
         if (emitterList.get(principal.getName()) == null) {
             SseEmitter emitter = new SseEmitter();
             emitter.onCompletion(() -> emitterList.put(principal.getName(),null));
-            emitter.onTimeout(() ->emitterList.put(principal.getName(),null));
             emitterList.put(principal.getName(),emitter );
         }
         return emitterList.get(principal.getName());
@@ -47,12 +45,12 @@ public class SSEController {
             if (sseEmitterEntry.getValue() == null){
                 emitterList.put(sseEmitterEntry.getKey(), new SseEmitter());
             }
-            sseEmitterEntry.getValue().send(createHtml(profileFormData));
+            sseEmitterEntry.getValue().send(createProfileCardHtml(profileFormData));
         }
     }
 
 
-    private String createHtml(ProfileFormData profileFormData){
+    private String createProfileCardHtml(ProfileFormData profileFormData){
         Context profileCard = new Context();
         profileCard.setVariable("nickname",profileFormData.getNickname());
         profileCard.setVariable("gender",profileFormData.getGender());

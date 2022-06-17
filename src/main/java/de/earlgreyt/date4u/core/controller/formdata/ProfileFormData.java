@@ -1,4 +1,4 @@
-package de.earlgreyt.date4u.controller.formdata;
+package de.earlgreyt.date4u.core.controller.formdata;
 
 import de.earlgreyt.date4u.core.entitybeans.Photo;
 import de.earlgreyt.date4u.core.entitybeans.Profile;

@@ -1,32 +1,35 @@
-package de.earlgreyt.date4u.controller;
+package de.earlgreyt.date4u.core.controller;
 
 import de.earlgreyt.date4u.core.PhotoService;
+import de.earlgreyt.date4u.core.UnicornDetailService;
+import de.earlgreyt.date4u.core.UnicornDetails;
+import de.earlgreyt.date4u.core.entitybeans.Photo;
+import de.earlgreyt.date4u.core.entitybeans.Profile;
+import de.earlgreyt.date4u.core.repositories.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.FileUrlResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
-import org.springframework.util.ResourceUtils;
+import org.springframework.ui.Model;
 import org.springframework.util.StreamUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.Principal;
 import java.util.Optional;
 
 @RestController
 public class PhotoRestController {
     private final PhotoService photoService;
-
+    private final UnicornDetailService unicornDetailService;
+    private final ProfileRepository profileRepository;
     @Autowired
-    public PhotoRestController(PhotoService photoService) {
+    public PhotoRestController(PhotoService photoService, UnicornDetailService unicornDetailService, ProfileRepository profileRepository) {
         this.photoService = photoService;
+        this.unicornDetailService = unicornDetailService;
+        this.profileRepository = profileRepository;
     }
 
     @GetMapping( path     = "/api/photo/{photoName}",
@@ -56,5 +59,21 @@ public class PhotoRestController {
             return getPhoto(photoName);
         }
         return photo;
+    }
+    @PostMapping("/uploadPhoto")
+    public String uploadPhoto(Principal principal, @RequestParam("image") MultipartFile multipartFile) throws IOException {
+        UnicornDetails unicornDetails = (UnicornDetails) unicornDetailService.loadUserByUsername(principal.getName());
+        if (unicornDetails.getProfile().isPresent()) {
+            String filename = photoService.upload(multipartFile.getBytes());
+            Profile profile = unicornDetails.getProfile().get();
+            Photo photo = new Photo(filename);
+            photo.setName(filename);
+            photo.setProfile(profile);
+            photo.setProfilePhoto(false);
+            profile.addPhoto(photo);
+            profileRepository.save(profile);
+        }
+
+        return "redirect:/profile/";
     }
 }
