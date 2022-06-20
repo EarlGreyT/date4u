@@ -32,7 +32,6 @@ public class SSEController {
         if (emitterList.get(principal.getName()) == null) {
             SseEmitter emitter = new SseEmitter();
             emitter.onCompletion(() -> emitterList.remove(principal.getName())); //is this necessary?
-            emitter.onTimeout(() -> emitterList.remove(principal.getName()));
             emitterList.put(principal.getName(),emitter );
         }
         return emitterList.get(principal.getName());
@@ -45,9 +44,10 @@ public class SSEController {
         ProfileFormData profileFormData = profileUpdateEvent.getProfileFormData();
         for (String target :profileUpdateEvent.getTargets()) {
             SseEmitter sseEmitter=emitterList.get(target);
-            if (sseEmitter != null) {
+            if (sseEmitter != null){
                 sseEmitter.send(createProfileCardHtml(profileFormData));
             }
+
         }
     }
 

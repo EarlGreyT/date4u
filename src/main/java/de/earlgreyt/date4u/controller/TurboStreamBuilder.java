@@ -16,8 +16,8 @@ public class TurboStreamBuilder {
   public String buildTurboStream(String action, String target, String templateHTML ,Map<String, Object> values){
     Context context = new Context();
     context.setVariables(values);
-    String targetString = templateEngine.process(templateHTML,context);
-    targetString ="<turbo-stream target=\""+target+"\" action=\""+action+"\"><template>"+targetString+"</template></turboStream>";
+    String targetString = templateEngine.process(templateHTML,context).trim();
+    targetString ="<turbo-stream target=\""+target+"\" action=\""+action+"\"><template>"+targetString+"</template></turbo-stream>".trim();
     return  targetString.replace("\n","").replace("\r","").trim();
   }
 }
