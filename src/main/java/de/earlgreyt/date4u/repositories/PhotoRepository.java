@@ -1,4 +1,4 @@
-package de.earlgreyt.date4u.core.repositories;
+package de.earlgreyt.date4u.repositories;
 
 import de.earlgreyt.date4u.core.entitybeans.Photo;
 import org.springframework.data.jpa.repository.JpaRepository;

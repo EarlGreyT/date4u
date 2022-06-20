@@ -35,9 +35,9 @@
     </a>
 </sideBar>
 <main class=" grid grid-cols-12 mx-36 py-20 px-20 gap-2">
-    <turbo-frame id="profile"
+    <turbo-frame th:object="${profile}" th:id="|unicorn_${profile.nickname}|"
                  class="col-start-1 grid grid-cols-1 col-span-full max-w-[575px] lg:col-span-8 md:col-span-full md:grid-cols-12 gap-2">
-        <div th:object="${profile}"
+        <div
              class="rounded-xl overflow-clip bg-gray-800/30 col-span-full grid content-start grid-cols-1 gap-1 md:grid-cols-12 mx-auto auto-rows-min">
             <img class="object-cover  col-span-full md:col-span-3 md:row-span-3" alt="Profile Picture"
                  th:src="@{/api/photo/{photoName}(photoName=${profile.profilePhotoName})}">
@@ -64,7 +64,6 @@
                           style="box-shadow: none">
                        </textarea>
             </div>
-            <a class="app-button col-start-1 m-2" href="/profile/edit">Edit</a>
         </div>
     </turbo-frame>
     <div class="col-span-full md:col-span-6 md:col-start-3 rounded-xl overflow-clip bg-gray-800/30" data-controller="swiper" data-swiper-perview-value=3>

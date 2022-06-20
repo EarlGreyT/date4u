@@ -194,7 +194,33 @@ public class Profile {
             default -> setGender(0);
         }
     }
-
+    public void setAttractedToGender(String genderName){
+        switch (genderName.toLowerCase()){
+            case "male" -> setAttractedToGender(2);
+            case "female" -> setAttractedToGender(1);
+            case "non-binary" -> setAttractedToGender(3);
+            default -> attractedToGender = -1;
+        }
+    }
+    public String getAttractedToGenderName(){
+        if (attractedToGender == null){
+            return "All";
+        }
+        switch (attractedToGender){
+            case 1 -> {
+                return "Female";
+            }
+            case 2 -> {
+                return "Male";
+            }
+            case 0 -> {
+                return "Non-Binary";
+            }
+            default -> {
+                return "All";
+            }
+        }
+    }
     public String getGenderName() {
         switch (gender) {
             case 1 -> {
@@ -208,7 +234,32 @@ public class Profile {
             }
         }
     }
-
+     public static byte genderNameToGender(String genderName){
+        switch (genderName) {
+            case "Female" -> {
+                return 1;
+            }
+            case "Male" -> {
+                return 2;
+            }
+            default -> {
+                return 3;
+            }
+        }
+    }
+    public static String genderToGenderName(int gender){
+        switch(gender){
+            case 1 -> {
+                return "Female";
+            }
+            case 2 -> {
+                return "Male";
+            }
+            default -> {
+                return "Non-Binary";
+            }
+        }
+    }
     public Set<Profile> getProfilesILike() {
         return profilesILike;
     }

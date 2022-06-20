@@ -2,8 +2,8 @@ package de.earlgreyt.date4u.core;
 
 import de.earlgreyt.date4u.core.entitybeans.Profile;
 import de.earlgreyt.date4u.core.entitybeans.Unicorn;
-import de.earlgreyt.date4u.core.repositories.ProfileRepository;
-import de.earlgreyt.date4u.core.repositories.UnicornRepository;
+import de.earlgreyt.date4u.repositories.ProfileRepository;
+import de.earlgreyt.date4u.repositories.UnicornRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

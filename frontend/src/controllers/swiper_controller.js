@@ -17,6 +17,7 @@ export default class extends Controller {
             slidesPerView: this.perviewValue,
             spaceBetween: this.spacebetweenValue,
             loop: this.loopValue,
+
             hashNavigation: {
                 watchState: true,
             },

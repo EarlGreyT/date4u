@@ -18,13 +18,11 @@
             </div>
         </div>
     </div>
-    <input type="text" th:field="*{id}" hidden>
     <div class="border-none outline-none w-max col-start-1  md:col-start-4">
         <label for="nicknameInput">Nickname</label>
         <input type="text" th:field="*{nickname}" id="nicknameInput"
                class="bg-gray-800/30 rounded-md border-none outline-none h-min w-max" required>
     </div>
-    <input type="text" th:field="*{id}" hidden>
 
     <div class="outline-none w-max col-start-1  md:col-start-4">
         <label for="hornlengthInput">Hornlänge</label>
@@ -34,6 +32,11 @@
     <div class="border-none outline-none w-max col-start-1 md:col-start-4">
         <label  for="genderInput">Geschlecht</label>
         <input type="text" th:field="*{gender}" id="genderInput"
+               class="bg-gray-800/30 rounded-md border-none outline-none h-min w-max" required>
+    </div>
+    <div class="border-none outline-none w-max col-start-1 md:col-start-4">
+        <label  for="attractedToGenderInput">Ich suche</label>
+        <input type="text" th:field="*{attractedToGender}" id="attractedToGenderInput"
                class="bg-gray-800/30 rounded-md border-none outline-none h-min w-max" required>
     </div>
     <div class="border-none outline-none w-max col-start-1 md:col-start-4">

@@ -1,0 +1,33 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<turbo-frame th:id="|unicorn_${nickname}|"
+             class="col-start-1 grid grid-cols-1 col-span-full max-w-[575px] lg:col-span-8 md:col-span-full md:grid-cols-12 gap-2">
+  <div
+       class="rounded-xl overflow-clip bg-gray-800/30 col-span-full grid content-start grid-cols-1 gap-1 md:grid-cols-12 mx-auto auto-rows-min">
+    <img class="object-cover  col-span-full md:col-span-3 md:row-span-3" alt="Profile Picture"
+         th:src="|/api/photo/${profilePhotoName}|">
+    <div class=" rounded-md border-none outline-none h-min w-max col-start-1 md:col-start-4"
+         th:text="|Nickname ${nickname}|" id="nicknameInput">
+
+    </div>
+
+    <div class=" rounded-md border-none outline-none h-min w-max col-start-1  md:col-start-4"
+         th:text="|Hornlänge ${hornlength}|" id="hornlengthInput">
+    </div>
+    <div class=" rounded-md border-none outline-none h-min w-max col-start-1 md:col-start-4"
+         th:text="|Geschlecht ${gender}|" id="genderInput">
+    </div>
+    <div class=" rounded-md border-none outline-none h-min w-max col-start-1 md:col-start-4"
+         th:text="|Ich suche ${attractedToGender}s|" id="atractedToGenderInput">
+    </div>
+    <div class=" rounded-md border-none outline-none h-min w-max col-start-1 md:col-start-4"
+         th:text="|Geburtstag ${#temporals.format(birthdate)}|" id="birthdateInput">
+    </div>
+    <div class="border-none outline-none w-max  col-start-1 col-span-full">
+                <textarea readonly th:name="description" th:text="${description}" id="descriptionInput"
+                          class="resize-none box-content bg-transparent col-span-full h-max rounded-md border-none outline-none"
+                          style="box-shadow: none">
+                       </textarea>
+    </div>
+  </div>
+</turbo-frame>
+</html>
