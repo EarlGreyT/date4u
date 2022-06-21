@@ -1,7 +1,10 @@
 package de.earlgreyt.date4u.controller;
 
+import de.earlgreyt.date4u.controller.events.LikeEvent;
 import de.earlgreyt.date4u.controller.events.ProfileUpdateEvent;
+import de.earlgreyt.date4u.core.entitybeans.Profile;
 import de.earlgreyt.date4u.core.formdata.ProfileFormData;
+import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
@@ -20,20 +23,21 @@ import java.util.Map;
 public class SSEController {
 
     private final TurboStreamBuilder turboStreamBuilder;
-    private Map<String,SseEmitter> emitterList = new HashMap<>();
+    private Map<String,SseEmitter> emitterList = new ConcurrentHashMap<>();
 
     public SSEController(TurboStreamBuilder turboStreamBuilder) {
         this.turboStreamBuilder = turboStreamBuilder;
     }
 
     @GetMapping(path="/turbo-sse", produces= MediaType.TEXT_EVENT_STREAM_VALUE)
-    @CrossOrigin
     public SseEmitter handle(Principal principal) {
         if (emitterList.get(principal.getName()) == null) {
             SseEmitter emitter = new SseEmitter();
-            emitter.onCompletion(() -> emitterList.remove(principal.getName())); //is this necessary?
+            emitter.onCompletion(() -> emitterList.remove(principal.getName()));
+            emitter.onTimeout(() -> emitterList.remove(principal.getName()));//is this necessary?
             emitterList.put(principal.getName(),emitter );
         }
+        System.out.println("STUPID EMITTER CONECTION! "+principal.getName());
         return emitterList.get(principal.getName());
 
     }
@@ -46,11 +50,34 @@ public class SSEController {
             SseEmitter sseEmitter=emitterList.get(target);
             if (sseEmitter != null){
                 sseEmitter.send(createProfileCardHtml(profileFormData));
+                System.out.println("STUPID UPDATE EVENT FOR "+target);
             }
 
         }
     }
+    @EventListener
+    @Async
+    public void handleLikeEvent(LikeEvent likeEvent) throws IOException {
+        Profile liker = likeEvent.getLiker();
+        Profile likee = likeEvent.getLikee();
+        if (likee.getProfilesILike().contains(liker)){
+            SseEmitter likerEmitter = emitterList.get(liker.getUnicorn().getEmail());
+            SseEmitter likeeEmitter = emitterList.get(likee.getUnicorn().getEmail());
+            likerEmitter.send(appendProfileCardHtml(new ProfileFormData(likee)));
+            likeeEmitter.send(appendProfileCardHtml(new ProfileFormData(liker)));
+        }
+    }
 
+    private String appendProfileCardHtml(ProfileFormData profileFormData) {
+        Map<String, Object> objectMap = new HashMap<>();
+        objectMap.put("nickname", profileFormData.getNickname());
+        objectMap.put("gender",profileFormData.getGender());
+        objectMap.put("hornlength",profileFormData.getHornlength());
+        objectMap.put("birthdate",profileFormData.getBirthdate());
+        objectMap.put("profilePhotoName",profileFormData.getProfilePhotoName());
+        objectMap.put("attractedToGender", profileFormData.getAttractedToGender());
+        return turboStreamBuilder.buildTurboStream("append","matchesId","profile/profileCard.html",objectMap);
+    }
 
     private String createProfileCardHtml(ProfileFormData profileFormData){
         Map<String, Object> objectMap = new HashMap<>();

@@ -41,15 +41,24 @@
       <label for="minSizeInput"> mindest Hornlänge</label>
       <input type="text" th:field="*{minSize}" id="minSizeInput">
       <input type="checkbox" th:field="*{considerMinSize}">
+      <label for="maxSizeInput"> maximale Hornlänge</label>
+      <input type="text" th:field="*{maxSize}" id="maxSizeInput">
+      <input type="checkbox" th:field="*{considerMaxSize}">
+      <label for="minAgeInput"> mindest Alter</label>
+      <input type="text" th:field="*{minAge}" id="minAgeInput">
+      <input type="checkbox" th:field="*{considerMinAge}">
+      <label for="maxAgeInput"> maximales Alter</label>
+      <input type="text" th:field="*{maxAge}" id="maxAgeInput">
+      <input type="checkbox" th:field="*{considerMaxAge}">
       <button type="submit" class="app-button col-start-1 m-2">search!</button>
     </form>
   </turbo-frame>
   <turbo-frame id="searchResult" class="col-span-full flex flex-row flex-wrap gap-2">
-    <div th:each="likedProfile: ${lastSearch}">
-      <a data-turbo-frame="_top" data-action="_replace" th:href="|/unicorn/${likedProfile.nickname}|"
-           th:insert="profile/profileCard :: profileCard(${likedProfile.nickname}, ${likedProfile.profilePhotoName},${likedProfile.hornlength},${likedProfile.gender},${likedProfile.birthdate})">
-      </a>
-    </div>
+    <th:block th:each="likedProfile: ${lastSearch}">
+      <div
+           th:replace="profile/profileCard :: profileCard(${likedProfile.nickname}, ${likedProfile.profilePhotoName},${likedProfile.hornlength},${likedProfile.gender},${likedProfile.birthdate})">
+      </div>
+    </th:block>
   </turbo-frame>
 </main>
 </body>

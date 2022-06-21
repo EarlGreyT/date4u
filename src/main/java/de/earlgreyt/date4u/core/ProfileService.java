@@ -1,6 +1,7 @@
 package de.earlgreyt.date4u.core;
 
 
+import de.earlgreyt.date4u.controller.events.LikeEvent;
 import de.earlgreyt.date4u.controller.events.ProfileUpdateEvent;
 import de.earlgreyt.date4u.core.entitybeans.Photo;
 import de.earlgreyt.date4u.core.entitybeans.Profile;
@@ -43,7 +44,12 @@ public class ProfileService {
   }
   public void addLike(String nickname, UnicornDetails unicornDetails){
     Profile unicorn = unicornDetails.getProfile().get();
-    profileRepository.findProfileByNickname(nickname).ifPresent( profile -> unicorn.getProfilesILike().add(profile));
+    profileRepository.findProfileByNickname(nickname).ifPresent( profile -> {
+      unicorn.getProfilesILike().add(profile);
+      if (!profile.getProfilesThatLikeMe().contains(unicorn)){
+        applicationEventPublisher.publishEvent(new LikeEvent(this,unicorn,profile));
+      }
+    });
     profileRepository.save(unicorn);
   }
   public Optional<ProfileFormData> findProfileByNickname(String nickname) {

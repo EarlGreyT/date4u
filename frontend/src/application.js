@@ -12,6 +12,6 @@ Swiper.use([Navigation, Pagination, HashNavigation, Lazy]);
 window.Stimulus = Application.start()
 const context = require.context("./controllers", true, /\.js$/)
 Stimulus.load(definitionsFromContext(context))
-const eventSource = new EventSource("/turbo-sse");
+let eventSource = new EventSource("/turbo-sse");
 
 connectStreamSource(eventSource);

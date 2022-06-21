@@ -35,8 +35,10 @@
     </a>
 </sideBar>
 <main class="grid grid-cols-12 grid-flow-col-dense grid-auto-cols-min py-20 mx-36  px-20 gap-2">
-    <div class="flex col-span-full lg:col-span-3 gap-2" th:each="likedProfile: ${likedProfiles}">
-        <div  class="" th:insert="profile/profileCard :: profileCard(${likedProfile.nickname}, ${likedProfile.profilePhotoName},${likedProfile.hornlength},${likedProfile.gender},${likedProfile.birthdate})"></div>
+    <div class="flex flex-row flex-wrap col-span-full" id="matchesList">
+    <th:block th:each="likedProfile: ${likedProfiles}">
+        <div  th:replace="profile/profileCard :: profileCard(${likedProfile.nickname}, ${likedProfile.profilePhotoName},${likedProfile.hornlength},${likedProfile.gender},${likedProfile.birthdate})"></div>
+    </th:block>
     </div>
 </main>
 </body>
