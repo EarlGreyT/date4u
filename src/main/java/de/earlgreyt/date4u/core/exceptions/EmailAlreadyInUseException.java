@@ -1,5 +1,7 @@
 package de.earlgreyt.date4u.core.exceptions;
 
-public class EmailAlreadyInUseException extends Exception{
+import javax.validation.ConstraintViolationException;
+
+public class EmailAlreadyInUseException extends Exception {
 
 }

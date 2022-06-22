@@ -64,7 +64,7 @@ public class SecurityConfig {
   @Bean
   protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
     http.authorizeRequests((authz) -> authz
-            .mvcMatchers("/resources/**", "/register","/register/signup").permitAll()
+            .mvcMatchers("/css/**", "/register","/register/signup").permitAll()
             .anyRequest().authenticated()).formLogin(withDefaults());
     return http.build();
   }

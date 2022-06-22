@@ -13,20 +13,28 @@ import de.earlgreyt.date4u.core.formdata.UserDTO;
 import de.earlgreyt.date4u.repositories.search.SearchCriteria;
 import de.earlgreyt.date4u.repositories.search.SearchOperation;
 import java.time.LocalDate;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import javax.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationEventPublisher;
 
+
+import org.springframework.boot.context.properties.bind.validation.BindValidationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.thymeleaf.TemplateEngine;
+
 
 import java.security.Principal;
 import java.util.*;
+import org.springframework.web.bind.support.WebExchangeBindException;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @Validated
@@ -39,7 +47,6 @@ public class Date4uWebController {
 
   public Date4uWebController(
       UnicornDetailService unicornDetailService,
-      ApplicationEventPublisher applicationEventPublisher, TemplateEngine templateEngine,
       ProfileService profileService,
       TurboStreamBuilder turboStreamBuilder,
       RegisterService registerService) {
@@ -75,59 +82,69 @@ public class Date4uWebController {
     }
     return "profile/descriptionBubble";
   }
+
   @GetMapping("/register")
   public String showRegistrationForm(Model model) {
     model.addAttribute("user", new UserDTO());
+    model.addAttribute("errors", new HashMap<String, String>());
     return "register";
   }
-  @GetMapping("/register/errors")
-  public String showRegistrationFormWithErrors(Model model, UserDTO userDTO) {
-    model.addAttribute("user", new UserDTO());
-    return "register";
-  }
-  @PostMapping("/register/signup")
-  public String processSignUp(Model model, @Valid UserDTO userDTO){
-    boolean success = true;
+
+  @PostMapping("/register")
+  public String processSignUp(@ModelAttribute UserDTO user, Model model) {
+    model.addAttribute("user", user);
+    HashMap<String, String> errorMap = new HashMap<>();
     try {
-      registerService.register(userDTO);
-    } catch (EmailAlreadyInUseException e){
-      success = false;
-      model.addAttribute("emailMessage", "this Email is already in use!");
-    } catch (ValidationException e){
-      success = false;
-      model.addAttribute("validationMessage", e.getMessage());
-    } catch (Exception e){
-      success=false;
-      model.addAttribute("otherError", e.getMessage());
-    }
-    if (!success){
-      return "redirect:/register/errors";
+      registerService.register(user);
+    } catch (EmailAlreadyInUseException e) {
+      errorMap.put("email", "Email already in Use");
+      return "register";
+    } catch (ConstraintViolationException e) {
+      for (ConstraintViolation<?> constraintViolation : e.getConstraintViolations()) {
+        if (constraintViolation.getPropertyPath().toString().contains("nickname")) {
+          errorMap.put("nickname", constraintViolation.getMessage());
+        } else if(constraintViolation.getPropertyPath().toString().contains("email")){
+          errorMap.put("nickname", constraintViolation.getMessage());
+        } else {
+          errorMap.put("password", constraintViolation.getMessage());
+        }
+      }
+      model.addAttribute("errors", errorMap);
+      return "register";
     }
     return "redirect:/login";
+
+
   }
+
   @RequestMapping("/unicorn/{nickname}")
   public String profilePage(Model model, Principal principal, @PathVariable String nickname) {
     UnicornDetails unicornDetails = (UnicornDetails) unicornDetailService.loadUserByUsername(
         principal.getName());
     ProfileFormData profileFormData = profileService.findProfileByNickname(nickname).get();
     model.addAttribute("profile", profileFormData);
-    model.addAttribute("likes",unicornDetails.getProfile().get().getProfilesILike().stream().anyMatch(profile -> profile.getNickname().equals(nickname)));
+    model.addAttribute("likes", unicornDetails.getProfile().get().getProfilesILike().stream()
+        .anyMatch(profile -> profile.getNickname().equals(nickname)));
     return "unicorn";
   }
+
   @PostMapping("/unicorn/{nickname}")
   public String likeProfilePage(Model model, Principal principal, @PathVariable String nickname) {
     UnicornDetails unicornDetails = (UnicornDetails) unicornDetailService.loadUserByUsername(
         principal.getName());
     profileService.addLike(nickname, unicornDetails);
-    return "redirect:/unicorn/"+nickname;
+    return "redirect:/unicorn/" + nickname;
   }
+
   @PostMapping("/unicorn/{nickname}/dislike")
-  public String dislikeProfilePage(Model model, Principal principal, @PathVariable String nickname) {
+  public String dislikeProfilePage(Model model, Principal principal,
+      @PathVariable String nickname) {
     UnicornDetails unicornDetails = (UnicornDetails) unicornDetailService.loadUserByUsername(
         principal.getName());
     profileService.removeLike(nickname, unicornDetails);
-    return "redirect:/unicorn/"+nickname;
+    return "redirect:/unicorn/" + nickname;
   }
+
   @RequestMapping("/profile")
   public String profilePage(Model model, Principal principal) {
     UnicornDetails unicornDetails = (UnicornDetails) unicornDetailService.loadUserByUsername(
@@ -169,7 +186,7 @@ public class Date4uWebController {
     SearchData searchData = new SearchData(0, 0, 18, 200, false, false, false, false);
     model.addAttribute("searchData", searchData);
     model.addAttribute("pageNo", 0);
-    model.addAttribute("profile",profile);
+    model.addAttribute("profile", profile);
     return "search/search";
   }
 
@@ -194,7 +211,8 @@ public class Date4uWebController {
     }
     if (searchData.isConsiderMinAge()) {
       criteriaList.add(new SearchCriteria("birthdate",
-          searchData.getMinAge(), SearchOperation.NOT_BEFORE_NOW)); //Time Travelers from the future are fair game, no way to tell their age
+          searchData.getMinAge(),
+          SearchOperation.NOT_BEFORE_NOW)); //Time Travelers from the future are fair game, no way to tell their age
     }
     if (searchData.isConsiderMaxAge()) {
       criteriaList.add(new SearchCriteria("birthdate",
@@ -210,7 +228,7 @@ public class Date4uWebController {
     model.addAttribute("lastSearch", matches);
     model.addAttribute("searchData", searchData);
     model.addAttribute("pageNo", 1);
-    model.addAttribute("profile",profileFormData);
+    model.addAttribute("profile", profileFormData);
     return "search/search";
   }
 }
