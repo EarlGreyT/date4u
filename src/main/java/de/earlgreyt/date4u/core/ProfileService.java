@@ -9,16 +9,14 @@ import de.earlgreyt.date4u.core.formdata.ProfileFormData;
 import de.earlgreyt.date4u.repositories.ProfileRepository;
 import de.earlgreyt.date4u.repositories.search.ProfileSpec;
 import de.earlgreyt.date4u.repositories.search.SearchCriteria;
-import de.earlgreyt.date4u.repositories.search.SearchOperation;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
+import javax.transaction.Transactional;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -42,13 +40,29 @@ public class ProfileService {
     return new ProfileFormData(profile);
 
   }
+
   public void addLike(String nickname, UnicornDetails unicornDetails){
     Profile unicorn = unicornDetails.getProfile().get();
+    boolean[] sendEvent = {false};
+
     profileRepository.findProfileByNickname(nickname).ifPresent( profile -> {
-      unicorn.getProfilesILike().add(profile);
-      if (!profile.getProfilesThatLikeMe().contains(unicorn)){
-        applicationEventPublisher.publishEvent(new LikeEvent(this,unicorn,profile));
+      boolean added= unicorn.getProfilesILike().add(profile);
+      if (profile.getProfilesILike().contains(unicorn)){
+        sendEvent[0]=added;
+        System.out.println("SHOULD I SEND THE STUPID EVENT? "+sendEvent);
+
       }
+    });
+    profileRepository.save(unicorn);
+    if (sendEvent[0]){
+      applicationEventPublisher.publishEvent(new LikeEvent(this,unicorn,profileRepository.findProfileByNickname(nickname).get()));
+    }
+  }
+
+  public void removeLike(String nickname, UnicornDetails unicornDetails){
+    Profile unicorn = unicornDetails.getProfile().get();
+    profileRepository.findProfileByNickname(nickname).ifPresent( profile -> {
+      unicorn.getProfilesILike().remove(profile);
     });
     profileRepository.save(unicorn);
   }
@@ -66,7 +80,7 @@ public class ProfileService {
     unicornDetails.getProfile().ifPresent(profile -> {
       profile.setProfilePic(profileFormData.getProfilePhotoName());
       profile.setBirthdate(profileFormData.getBirthdate());
-      profile.setDescription(profile.getDescription());
+      profile.setDescription(profileFormData.getDescription());
       profile.setGender(profileFormData.getGender());
       profile.setHornlength(profileFormData.getHornlength());
       profile.setAttractedToGender(profileFormData.getAttractedToGender());

@@ -1,21 +1,27 @@
 package de.earlgreyt.date4u.controller;
 
 import de.earlgreyt.date4u.core.ProfileService;
+import de.earlgreyt.date4u.core.RegisterService;
+import de.earlgreyt.date4u.core.exceptions.EmailAlreadyInUseException;
 import de.earlgreyt.date4u.core.formdata.ProfileFormData;
 import de.earlgreyt.date4u.core.UnicornDetailService;
 import de.earlgreyt.date4u.core.UnicornDetails;
 import de.earlgreyt.date4u.core.entitybeans.Profile;
 import de.earlgreyt.date4u.core.formdata.SearchData;
+import de.earlgreyt.date4u.core.formdata.UserDTO;
 import de.earlgreyt.date4u.repositories.ProfileRepository;
 import de.earlgreyt.date4u.repositories.search.SearchCriteria;
 import de.earlgreyt.date4u.repositories.search.SearchOperation;
 import java.time.LocalDate;
+import javax.validation.Valid;
+import javax.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.TemplateEngine;
 
@@ -23,20 +29,24 @@ import java.security.Principal;
 import java.util.*;
 
 @Controller
+@Validated
 public class Date4uWebController {
 
   private final UnicornDetailService unicornDetailService;
   private final ProfileService profileService;
   private final TurboStreamBuilder turboStreamBuilder;
+  private final RegisterService registerService;
 
   public Date4uWebController(ProfileRepository profileRepository,
       UnicornDetailService unicornDetailService,
       ApplicationEventPublisher applicationEventPublisher, TemplateEngine templateEngine,
       ProfileService profileService,
-      TurboStreamBuilder turboStreamBuilder) {
+      TurboStreamBuilder turboStreamBuilder,
+      RegisterService registerService) {
     this.unicornDetailService = unicornDetailService;
     this.profileService = profileService;
     this.turboStreamBuilder = turboStreamBuilder;
+    this.registerService = registerService;
   }
 
   @RequestMapping("/*")
@@ -55,7 +65,6 @@ public class Date4uWebController {
 
   @RequestMapping("/matches/{nickname}/description")
   public String matchDescription(@PathVariable String nickname, Model model) {
-    String matchDescription;
     model.addAttribute("nickname", nickname);
     Optional<ProfileFormData> matchProfile = profileService.findProfileByNickname(nickname);
     if (matchProfile.isPresent()) {
@@ -66,13 +75,35 @@ public class Date4uWebController {
     }
     return "profile/descriptionBubble";
   }
-
+  @GetMapping("/register")
+  public String showRegistrationForm(Model model) {
+    model.addAttribute("user", new UserDTO());
+    return "register";
+  }
+  @PostMapping("/register/signup")
+  public String processSignUp(Model model, @Valid UserDTO userDTO){
+    boolean success = true;
+    try {
+      registerService.register(userDTO);
+    } catch (EmailAlreadyInUseException e){
+      success = false;
+      model.addAttribute("emailMessage", "this Email is already in use!");
+    } catch (ValidationException e){
+      success = false;
+      model.addAttribute("validationMessage", e.getMessage());
+    }
+    if (!success){
+      return "register";
+    }
+    return "registerSuccess";
+  }
   @RequestMapping("/unicorn/{nickname}")
   public String profilePage(Model model, Principal principal, @PathVariable String nickname) {
     UnicornDetails unicornDetails = (UnicornDetails) unicornDetailService.loadUserByUsername(
         principal.getName());
     ProfileFormData profileFormData = profileService.findProfileByNickname(nickname).get();
     model.addAttribute("profile", profileFormData);
+    model.addAttribute("likes",unicornDetails.getProfile().get().getProfilesILike().stream().anyMatch(profile -> profile.getNickname().equals(nickname)));
     return "unicorn";
   }
   @PostMapping("/unicorn/{nickname}")
@@ -82,7 +113,13 @@ public class Date4uWebController {
     profileService.addLike(nickname, unicornDetails);
     return "redirect:/unicorn/"+nickname;
   }
-
+  @PostMapping("/unicorn/{nickname}/dislike")
+  public String dislikeProfilePage(Model model, Principal principal, @PathVariable String nickname) {
+    UnicornDetails unicornDetails = (UnicornDetails) unicornDetailService.loadUserByUsername(
+        principal.getName());
+    profileService.removeLike(nickname, unicornDetails);
+    return "redirect:/unicorn/"+nickname;
+  }
   @RequestMapping("/profile")
   public String profilePage(Model model, Principal principal) {
     UnicornDetails unicornDetails = (UnicornDetails) unicornDetailService.loadUserByUsername(
@@ -118,10 +155,13 @@ public class Date4uWebController {
   }
 
   @RequestMapping("/search")
-  public String searchPage(Model model) {
+  public String searchPage(Model model, Principal principal) {
+    ProfileFormData profile = profileService.getProfileFormData(
+        (UnicornDetails) unicornDetailService.loadUserByUsername(principal.getName()));
     SearchData searchData = new SearchData(0, 0, 18, 200, false, false, false, false);
     model.addAttribute("searchData", searchData);
     model.addAttribute("pageNo", 0);
+    model.addAttribute("profile",profile);
     return "search/search";
   }
 
@@ -162,6 +202,7 @@ public class Date4uWebController {
     model.addAttribute("lastSearch", matches);
     model.addAttribute("searchData", searchData);
     model.addAttribute("pageNo", 1);
+    model.addAttribute("profile",profileFormData);
     return "search/search";
   }
 }

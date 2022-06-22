@@ -9,25 +9,25 @@
 </head>
 <body class="bg-gradient-to-r from-indigo-500 via-violet-500 via-purple-500 via-fuchsia-500 to-red-500">
 <sideBar class="container grid fixed grid-cols-1 auto-rows-min mx-auto gap-y-1 left-5 top-[25%] text-3xl w-1/12">
-    <a href="/matches" data-turbo-frame="content" data-turbo-action="replace">
+    <a href="/matches" data-turbo-frame="content" data-turbo-action="advance">
         <div class="sidebar-icon group">
             <i class="bi bi-arrow-through-heart"></i>
             <span class="sidebar-tooltip group-hover:scale-100">Matching Unicorns</span>
         </div>
     </a>
-    <a href="/profile" data-turbo-frame="content" data-turbo-action="replace">
+    <a href="/profile" data-turbo-frame="content" data-turbo-action="advance">
         <div class="sidebar-icon group">
             <i class="bi bi-journal-richtext"></i>
             <span class="sidebar-tooltip group-hover:scale-100">Profile</span>
         </div>
     </a>
-    <a href="/search" data-turbo-frame="content" data-turbo-action="replace">
+    <a href="/search" data-turbo-frame="content" data-turbo-action="advance">
         <div class="sidebar-icon group ">
             <i class="bi bi-search-heart"></i>
             <span class="sidebar-tooltip group-hover:scale-100">Search Unicorns</span>
         </div>
     </a>
-    <a href="/logout" data-turbo-frame="_top" data-turbo-action="replace">
+    <a href="/logout" data-turbo-frame="_top" data-turbo-action="advance">
         <div class="sidebar-icon group">
             <i class="bi bi-door-open"></i>
             <span class="sidebar-tooltip group-hover:scale-100">Logout, but why?</span>
@@ -58,29 +58,16 @@
             <div class=" rounded-md border-none outline-none h-min w-max col-start-1 md:col-start-4"
                  th:text="|Geburtstag *{#temporals.format(birthdate)}|" id="birthdateInput">
             </div>
-            <div class="border-none outline-none w-max  col-start-1 col-span-full">
-                <textarea readonly th:name="description" th:text="*{description}" id="descriptionInput"
+            <div class="border-none outline-none w-max min-w-fit  col-start-1 col-span-full">
+                <p readonly th:name="description" th:text="*{description}" id="descriptionInput"
                           class="resize-none box-content bg-transparent col-span-full h-max rounded-md border-none outline-none"
                           style="box-shadow: none">
-                       </textarea>
+                       </p>
             </div>
             <a class="app-button col-start-1 m-2" href="/profile/edit">Edit</a>
         </div>
     </turbo-frame>
-    <div class="col-span-full md:col-span-6 md:col-start-3 rounded-xl overflow-clip bg-gray-800/30" data-controller="swiper" data-swiper-perview-value=3>
-        <div class="swiper group" data-swiper-target="container">
-            <div class="swiper-wrapper">
-                <div th:each="photo: ${profile.photos}" class="swiper-slide flex justify-center content-center">
-                    <img th:data-hash="${photo}" th:data-src="@{/api/photo/{photoName}(photoName=${photo})}" class="swiper-lazy">
-                    <div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
-                </div>
-            </div>
-            <div class="swiper-button-prev swiperbutton group-hover:visible" data-swiper-target="prev">
-            </div>
-            <div class="swiper-button-next swiperbutton group-hover:visible" data-swiper-target="next">
-            </div>
-        </div>
-    </div>
+    <div th:replace="profile/profileSwiper :: profileSwiper(${profile.nickname},${profile.photos})"></div>
 </main>
 </body>
 </html>

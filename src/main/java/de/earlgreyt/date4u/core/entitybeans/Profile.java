@@ -21,273 +21,293 @@ import java.util.Set;
 @Access(AccessType.FIELD)
 @SecondaryTable(name = "likes", pkJoinColumns = @PrimaryKeyJoinColumn(name = "liker_fk"))
 public class Profile {
-    public static final int FEE = 1;
-    public static final int MAA = 2;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  public static final int FEE = 1;
+  public static final int MAA = 2;
 
-    private String nickname;
-    private LocalDate birthdate;
-    private short hornlength;
-    private byte gender;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(name = "attracted_to_gender")
-    private Byte attractedToGender;
+  private String nickname;
+  private LocalDate birthdate;
+  private short hornlength;
+  private byte gender;
 
-    private String description;
-    private LocalDateTime lastseen;
+  @Column(name = "attracted_to_gender")
+  private Byte attractedToGender;
 
-    @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private Unicorn unicorn;
+  private String description;
+  private LocalDateTime lastseen;
 
-    @OneToMany(mappedBy = "profile", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<Photo> photos;
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "likes",
-            joinColumns = @JoinColumn(name = "liker_fk"),
-            inverseJoinColumns = @JoinColumn(name = "likee_fk")
-    )
-    @JsonBackReference
-    Set<Profile> profilesILike;
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "likes",
-            joinColumns = @JoinColumn(name = "likee_fk"),
-            inverseJoinColumns = @JoinColumn(name = "liker_fk")
-    )
-    @JsonBackReference
-    Set<Profile> profilesThatLikeMe;
+  @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL)
+  @JsonManagedReference
+  private Unicorn unicorn;
 
-    protected Profile() {
-    }
+  @OneToMany(mappedBy = "profile", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @JsonManagedReference
+  private List<Photo> photos;
+  @ManyToMany(cascade = {
+      CascadeType.DETACH,
+      CascadeType.MERGE,
+      CascadeType.REFRESH,
+      CascadeType.PERSIST
+  })
+  @JoinTable(
+      name = "likes",
+      joinColumns = @JoinColumn(name = "liker_fk"),
+      inverseJoinColumns = @JoinColumn(name = "likee_fk")
+  )
+  @JsonBackReference
+  Set<Profile> profilesILike;
+  @ManyToMany(cascade = {
+      CascadeType.DETACH,
+      CascadeType.MERGE,
+      CascadeType.REFRESH,
+      CascadeType.PERSIST
+  })
+  @JoinTable(name = "likes",
+      joinColumns = @JoinColumn(name = "likee_fk"),
+      inverseJoinColumns = @JoinColumn(name = "liker_fk")
+  )
+  @JsonBackReference
+  Set<Profile> profilesThatLikeMe;
 
-    public void addPhoto(Photo p) {
-        p.setProfile(this);
-        photos.add(p);
-    }
+  protected Profile() {
+  }
 
-    public Profile(String nickname, LocalDate birthdate, int hornlength, int gender, Integer attractedToGender, String description, LocalDateTime lastseen) {
-        setNickname(nickname);
-        setBirthdate(birthdate);
-        setHornlength(hornlength);
-        setGender(gender);
-        setAttractedToGender(attractedToGender);
-        setDescription(description);
-        setLastseen(lastseen);
-    }
+  public void addPhoto(Photo p) {
+    p.setProfile(this);
+    photos.add(p);
+  }
 
-    public void updateProfilePicture(String photoName) {
-        if (photoName != null && !photoName.equals("")) {
-            photos.forEach(photo -> photo.setProfilePhoto(photo.getName().equals(photoName)));
-        }
-    }
+  public Profile(String nickname, LocalDate birthdate, int hornlength, int gender,
+      Integer attractedToGender, String description, LocalDateTime lastseen) {
+    setNickname(nickname);
+    setBirthdate(birthdate);
+    setHornlength(hornlength);
+    setGender(gender);
+    setAttractedToGender(attractedToGender);
+    setDescription(description);
+    setLastseen(lastseen);
+  }
 
-    public Long getId() {
-        return id;
+  public void updateProfilePicture(String photoName) {
+    if (photoName != null && !photoName.equals("")) {
+      photos.forEach(photo -> photo.setProfilePhoto(photo.getName().equals(photoName)));
     }
+  }
 
-    public String getNickname() {
-        return nickname;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
+  public String getNickname() {
+    return nickname;
+  }
 
-    public LocalDate getBirthdate() {
-        return birthdate;
-    }
+  public void setNickname(String nickname) {
+    this.nickname = nickname;
+  }
 
-    public void setBirthdate(LocalDate birthdate) {
-        this.birthdate = birthdate;
-    }
+  public LocalDate getBirthdate() {
+    return birthdate;
+  }
 
-    public int getHornlength() {
-        return hornlength;
-    }
+  public void setBirthdate(LocalDate birthdate) {
+    this.birthdate = birthdate;
+  }
 
-    public void setHornlength(int hornlength) {
-        this.hornlength = (short) hornlength;
-    }
+  public int getHornlength() {
+    return hornlength;
+  }
 
-    public int getGender() {
-        return gender;
-    }
+  public void setHornlength(int hornlength) {
+    this.hornlength = (short) hornlength;
+  }
 
-    public void setGender(int gender) {
-        this.gender = (byte) gender;
-    }
+  public int getGender() {
+    return gender;
+  }
 
-    public @Nullable Integer getAttractedToGender() {
-        return attractedToGender == null ? null : attractedToGender.intValue();
-    }
+  public void setGender(int gender) {
+    this.gender = (byte) gender;
+  }
 
-    public void setAttractedToGender(@Nullable Integer attractedToGender) {
-        this.attractedToGender = attractedToGender == null ? null : attractedToGender.byteValue();
-    }
+  public @Nullable
+  Integer getAttractedToGender() {
+    return attractedToGender == null ? null : attractedToGender.intValue();
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public void setAttractedToGender(@Nullable Integer attractedToGender) {
+    this.attractedToGender = attractedToGender == null ? null : attractedToGender.byteValue();
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public LocalDateTime getLastseen() {
-        return lastseen;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public void setLastseen(LocalDateTime lastseen) {
-        this.lastseen = lastseen;
-    }
+  public LocalDateTime getLastseen() {
+    return lastseen;
+  }
 
-    public void setHornlength(short hornlength) {
-        this.hornlength = hornlength;
-    }
+  public void setLastseen(LocalDateTime lastseen) {
+    this.lastseen = lastseen;
+  }
 
-    public void setGender(byte gender) {
-        this.gender = gender;
-    }
+  public void setHornlength(short hornlength) {
+    this.hornlength = hornlength;
+  }
 
-    public void setAttractedToGender(Byte attractedToGender) {
-        this.attractedToGender = attractedToGender;
-    }
+  public void setGender(byte gender) {
+    this.gender = gender;
+  }
 
-    public Unicorn getUnicorn() {
-        return unicorn;
-    }
+  public void setAttractedToGender(Byte attractedToGender) {
+    this.attractedToGender = attractedToGender;
+  }
 
-    public void setUnicorn(Unicorn unicorn) {
-        this.unicorn = unicorn;
-    }
+  public Unicorn getUnicorn() {
+    return unicorn;
+  }
 
-    public List<Photo> getPhotos() {
-        return photos;
-    }
+  public void setUnicorn(Unicorn unicorn) {
+    this.unicorn = unicorn;
+  }
 
-    public void setPhotos(List<Photo> photos) {
-        this.photos = photos;
-    }
+  public List<Photo> getPhotos() {
+    return photos;
+  }
 
-    public Optional<Photo> getProfilePic() {
-        return photos.stream().filter(Photo::isProfilePhoto).findAny();
-    }
+  public void setPhotos(List<Photo> photos) {
+    this.photos = photos;
+  }
 
-    public void setProfilePic(String profilePicName) {
-        Optional<Photo> newProfilePic = photos.stream().filter(photo -> photo.getName().equals(profilePicName)).findAny();
-        newProfilePic.ifPresent(profilePhoto ->
-        {
-            this.getProfilePic().ifPresent(photo -> photo.setProfilePhoto(false));
-            profilePhoto.setProfilePhoto(true);
-        });
-    }
+  public Optional<Photo> getProfilePic() {
+    return photos.stream().filter(Photo::isProfilePhoto).findAny();
+  }
 
-    public void setGender(String genderName) {
-        switch (genderName) {
-            case "Male" -> setGender(2);
-            case "Female" -> setGender(1);
-            default -> setGender(0);
-        }
-    }
-    public void setAttractedToGender(String genderName){
-        switch (genderName.toLowerCase()){
-            case "male" -> setAttractedToGender(2);
-            case "female" -> setAttractedToGender(1);
-            case "non-binary" -> setAttractedToGender(3);
-            default -> attractedToGender = -1;
-        }
-    }
-    public String getAttractedToGenderName(){
-        if (attractedToGender == null){
-            return "All";
-        }
-        switch (attractedToGender){
-            case 1 -> {
-                return "Female";
-            }
-            case 2 -> {
-                return "Male";
-            }
-            case 0 -> {
-                return "Non-Binary";
-            }
-            default -> {
-                return "All";
-            }
-        }
-    }
-    public String getGenderName() {
-        switch (gender) {
-            case 1 -> {
-                return "Female";
-            }
-            case 2 -> {
-                return "Male";
-            }
-            default -> {
-                return "Non-Binary";
-            }
-        }
-    }
-     public static byte genderNameToGender(String genderName){
-        switch (genderName) {
-            case "Female" -> {
-                return 1;
-            }
-            case "Male" -> {
-                return 2;
-            }
-            default -> {
-                return 3;
-            }
-        }
-    }
-    public static String genderToGenderName(int gender){
-        switch(gender){
-            case 1 -> {
-                return "Female";
-            }
-            case 2 -> {
-                return "Male";
-            }
-            default -> {
-                return "Non-Binary";
-            }
-        }
-    }
-    public Set<Profile> getProfilesILike() {
-        return profilesILike;
-    }
+  public void setProfilePic(String profilePicName) {
+    Optional<Photo> newProfilePic = photos.stream()
+        .filter(photo -> photo.getName().equals(profilePicName)).findAny();
+    newProfilePic.ifPresent(profilePhoto ->
+    {
+      this.getProfilePic().ifPresent(photo -> photo.setProfilePhoto(false));
+      profilePhoto.setProfilePhoto(true);
+    });
+  }
 
-    public void setProfilesILike(Set<Profile> profilesILike) {
-        this.profilesILike = profilesILike;
+  public void setGender(String genderName) {
+    switch (genderName) {
+      case "Male" -> setGender(2);
+      case "Female" -> setGender(1);
+      default -> setGender(0);
     }
+  }
 
-    public Set<Profile> getProfilesThatLikeMe() {
-        return profilesThatLikeMe;
+  public void setAttractedToGender(String genderName) {
+    switch (genderName.toLowerCase()) {
+      case "male" -> setAttractedToGender(2);
+      case "female" -> setAttractedToGender(1);
+      case "non-binary" -> setAttractedToGender(3);
+      default -> attractedToGender = -1;
     }
+  }
 
-    public void setProfilesThatLikeMe(Set<Profile> profilesThatLikeMe) {
-        this.profilesThatLikeMe = profilesThatLikeMe;
+  public String getAttractedToGenderName() {
+    if (attractedToGender == null) {
+      return "All";
     }
+    switch (attractedToGender) {
+      case 1 -> {
+        return "Female";
+      }
+      case 2 -> {
+        return "Male";
+      }
+      case 3 -> {
+        return "Non-Binary";
+      }
+      default -> {
+        return "All";
+      }
+    }
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        return o instanceof Profile profile && nickname.equals(profile.nickname);
+  public String getGenderName() {
+    switch (gender) {
+      case 1 -> {
+        return "Female";
+      }
+      case 2 -> {
+        return "Male";
+      }
+      default -> {
+        return "Non-Binary";
+      }
     }
+  }
 
-    @Override
-    public int hashCode() {
-        return nickname.hashCode();
+  public static byte genderNameToGender(String genderName) {
+    switch (genderName) {
+      case "Female" -> {
+        return 1;
+      }
+      case "Male" -> {
+        return 2;
+      }
+      default -> {
+        return 3;
+      }
     }
+  }
 
-    @Override
-    public String toString() {
-        return "Profile[id=%d]".formatted(id);
+  public static String genderToGenderName(int gender) {
+    switch (gender) {
+      case 1 -> {
+        return "Female";
+      }
+      case 2 -> {
+        return "Male";
+      }
+      default -> {
+        return "Non-Binary";
+      }
     }
+  }
+
+  public Set<Profile> getProfilesILike() {
+    return profilesILike;
+  }
+
+  public void setProfilesILike(Set<Profile> profilesILike) {
+    this.profilesILike = profilesILike;
+  }
+
+  public Set<Profile> getProfilesThatLikeMe() {
+    return profilesThatLikeMe;
+  }
+
+  public void setProfilesThatLikeMe(Set<Profile> profilesThatLikeMe) {
+    this.profilesThatLikeMe = profilesThatLikeMe;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    return o instanceof Profile profile && nickname.equals(profile.nickname);
+  }
+
+  @Override
+  public int hashCode() {
+    return nickname.hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return "Profile[id=%d]".formatted(id);
+  }
 }
