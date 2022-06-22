@@ -9,13 +9,9 @@ import de.earlgreyt.date4u.core.formdata.ProfileFormData;
 import de.earlgreyt.date4u.repositories.ProfileRepository;
 import de.earlgreyt.date4u.repositories.search.ProfileSpec;
 import de.earlgreyt.date4u.repositories.search.SearchCriteria;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
-import javax.transaction.Transactional;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
@@ -32,11 +28,6 @@ public class ProfileService {
   }
   public ProfileFormData getProfileFormData(UnicornDetails unicornDetails) {
     Profile profile = unicornDetails.getProfile().get();
-    Optional<Photo> optionalPhoto = profile.getProfilePic();
-    String profilePhotoName = "";
-    if (optionalPhoto.isPresent()) {
-      profilePhotoName = optionalPhoto.get().getName();
-    }
     return new ProfileFormData(profile);
 
   }

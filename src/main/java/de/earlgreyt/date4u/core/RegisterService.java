@@ -43,15 +43,3 @@ public class RegisterService {
     }
 }
 
-@Configuration
-class RegisterConfig{
-    @Bean
-    PasswordEncoder encoder(){
-        Map<String,PasswordEncoder> encoders = new HashMap<>();
-        encoders.put("bcrypt", new BCryptPasswordEncoder());
-        encoders.put("noop", NoOpPasswordEncoder.getInstance());
-        encoders.put("pbkdf2", new Pbkdf2PasswordEncoder());
-        encoders.put("scrypt", new SCryptPasswordEncoder());
-        return new DelegatingPasswordEncoder("bcrypt",encoders);
-    }
-}
