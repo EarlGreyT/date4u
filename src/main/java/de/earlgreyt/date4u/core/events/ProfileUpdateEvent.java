@@ -1,4 +1,4 @@
-package de.earlgreyt.date4u.controller.events;
+package de.earlgreyt.date4u.core.events;
 
 import de.earlgreyt.date4u.core.formdata.ProfileFormData;
 import java.util.Set;

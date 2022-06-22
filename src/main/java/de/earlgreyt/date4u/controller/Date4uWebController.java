@@ -2,6 +2,7 @@ package de.earlgreyt.date4u.controller;
 
 import de.earlgreyt.date4u.core.ProfileService;
 import de.earlgreyt.date4u.core.RegisterService;
+import de.earlgreyt.date4u.core.TurboStreamBuilder;
 import de.earlgreyt.date4u.core.exceptions.EmailAlreadyInUseException;
 import de.earlgreyt.date4u.core.formdata.ProfileFormData;
 import de.earlgreyt.date4u.core.UnicornDetailService;
@@ -9,7 +10,6 @@ import de.earlgreyt.date4u.core.UnicornDetails;
 import de.earlgreyt.date4u.core.entitybeans.Profile;
 import de.earlgreyt.date4u.core.formdata.SearchData;
 import de.earlgreyt.date4u.core.formdata.UserDTO;
-import de.earlgreyt.date4u.repositories.ProfileRepository;
 import de.earlgreyt.date4u.repositories.search.SearchCriteria;
 import de.earlgreyt.date4u.repositories.search.SearchOperation;
 import java.time.LocalDate;
@@ -37,7 +37,7 @@ public class Date4uWebController {
   private final TurboStreamBuilder turboStreamBuilder;
   private final RegisterService registerService;
 
-  public Date4uWebController(ProfileRepository profileRepository,
+  public Date4uWebController(
       UnicornDetailService unicornDetailService,
       ApplicationEventPublisher applicationEventPublisher, TemplateEngine templateEngine,
       ProfileService profileService,

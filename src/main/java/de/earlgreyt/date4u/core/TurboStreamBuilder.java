@@ -1,4 +1,4 @@
-package de.earlgreyt.date4u.controller;
+package de.earlgreyt.date4u.core;
 
 import java.util.Map;
 import org.springframework.stereotype.Component;

@@ -1,18 +1,17 @@
 package de.earlgreyt.date4u.controller;
 
-import de.earlgreyt.date4u.controller.events.LikeEvent;
-import de.earlgreyt.date4u.controller.events.ProfileUpdateEvent;
+import de.earlgreyt.date4u.core.TurboStreamBuilder;
+import de.earlgreyt.date4u.core.events.LikeEvent;
+import de.earlgreyt.date4u.core.events.ProfileUpdateEvent;
 import de.earlgreyt.date4u.core.entitybeans.Profile;
 import de.earlgreyt.date4u.core.formdata.ProfileFormData;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import org.thymeleaf.context.Context;
 
 import java.io.IOException;
 import java.security.Principal;

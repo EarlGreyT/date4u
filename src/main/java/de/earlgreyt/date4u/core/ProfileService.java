@@ -1,9 +1,8 @@
 package de.earlgreyt.date4u.core;
 
 
-import de.earlgreyt.date4u.controller.events.LikeEvent;
-import de.earlgreyt.date4u.controller.events.ProfileUpdateEvent;
-import de.earlgreyt.date4u.core.entitybeans.Photo;
+import de.earlgreyt.date4u.core.events.LikeEvent;
+import de.earlgreyt.date4u.core.events.ProfileUpdateEvent;
 import de.earlgreyt.date4u.core.entitybeans.Profile;
 import de.earlgreyt.date4u.core.formdata.ProfileFormData;
 import de.earlgreyt.date4u.repositories.ProfileRepository;

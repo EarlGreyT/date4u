@@ -1,4 +1,4 @@
-package de.earlgreyt.date4u.controller.events;
+package de.earlgreyt.date4u.core.events;
 
 import de.earlgreyt.date4u.core.entitybeans.Profile;
 import org.springframework.context.ApplicationEvent;
