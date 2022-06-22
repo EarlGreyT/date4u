@@ -67,8 +67,6 @@ public class SSEController {
       likerEmitter.send(appendProfileCardHtml(new ProfileFormData(likee)));
       likeeEmitter.send(appendProfileCardHtml(new ProfileFormData(liker)));
     }
-    System.out.println("STUPID UPDATE EVENT FOR " + likee.getNickname());
-    System.out.println("STUPID UPDATE EVENT FOR " + liker.getNickname());
   }
 
   private String appendProfileCardHtml(ProfileFormData profileFormData) {
@@ -91,10 +89,6 @@ public class SSEController {
     objectMap.put("birthdate", profileFormData.getBirthdate());
     objectMap.put("profilePhotoName", profileFormData.getProfilePhotoName());
     objectMap.put("attractedToGender", profileFormData.getAttractedToGender());
-    System.out.println(
-        turboStreamBuilder.buildTurboStream("replace", "profCard_" + profileFormData.getNickname(),
-            "profile/profileCard.html", objectMap) + turboStreamBuilder.buildTurboStream("replace",
-            "unicorn_" + profileFormData.getNickname(), "profile/unicornProfile.html", objectMap));
     return
         turboStreamBuilder.buildTurboStream("replace", "profCard_" + profileFormData.getNickname(),
             "profile/profileCard.html", objectMap) + turboStreamBuilder.buildTurboStream("replace",

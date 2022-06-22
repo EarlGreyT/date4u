@@ -49,8 +49,6 @@ public class ProfileService {
       boolean added= unicorn.getProfilesILike().add(profile);
       if (profile.getProfilesILike().contains(unicorn)){
         sendEvent[0]=added;
-        System.out.println("SHOULD I SEND THE STUPID EVENT? "+sendEvent);
-
       }
     });
     profileRepository.save(unicorn);
