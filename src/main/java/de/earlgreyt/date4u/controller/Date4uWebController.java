@@ -80,8 +80,14 @@ public class Date4uWebController {
     model.addAttribute("user", new UserDTO());
     return "register";
   }
+  @GetMapping("/register")
+  public String showRegistrationForm(Model model, UserDTO userDTO) {
+    model.addAttribute("user", new UserDTO());
+    return "register";
+  }
   @PostMapping("/register/signup")
   public String processSignUp(Model model, @Valid UserDTO userDTO){
+    System.out.println("STUPID REGISTRATION RECEIVED! HI " + userDTO.getNickname());
     boolean success = true;
     try {
       registerService.register(userDTO);
@@ -93,9 +99,9 @@ public class Date4uWebController {
       model.addAttribute("validationMessage", e.getMessage());
     }
     if (!success){
-      return "register";
+      return "redirect:/register";
     }
-    return "registerSuccess";
+    return "redirect:/login";
   }
   @RequestMapping("/unicorn/{nickname}")
   public String profilePage(Model model, Principal principal, @PathVariable String nickname) {

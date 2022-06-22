@@ -3,6 +3,7 @@ package de.earlgreyt.date4u.core.formdata;
 import de.earlgreyt.date4u.core.entitybeans.Photo;
 import de.earlgreyt.date4u.core.entitybeans.Profile;
 import java.util.Objects;
+import java.util.Optional;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -37,14 +38,18 @@ public class ProfileFormData {
     }
 
     public ProfileFormData(Profile profile) {
-        this(profile.getNickname(), profile.getHornlength(), profile.getGenderName(), profile.getProfilePic().get().getName(), profile.getBirthdate(), profile.getDescription(), profile.getPhotos(), profile.getUnicorn().getEmail(), profile.getAttractedToGenderName());
+        this(profile.getNickname(), profile.getHornlength(), profile.getGenderName(), profile.getProfilePic(), profile.getBirthdate(), profile.getDescription(), profile.getPhotos(), profile.getUnicorn().getEmail(), profile.getAttractedToGenderName());
     }
 
-    public ProfileFormData(String nickname, int hornlength, String gender, String profilePhotoName, LocalDate birthdate, String description, List<Photo> photos, String email, String attractedToGender) {
+    public ProfileFormData(String nickname, int hornlength, String gender, Optional<Photo> profilePhoto, LocalDate birthdate, String description, List<Photo> photos, String email, String attractedToGender) {
         this.nickname = nickname;
         this.hornlength = hornlength;
         this.gender = gender;
-        this.profilePhotoName = profilePhotoName;
+        if (profilePhoto.isPresent()) {
+            this.profilePhotoName = profilePhoto.get().getName();
+        } else {
+            this.profilePhotoName ="__noPhoto";
+        }
         this.birthdate = birthdate;
         this.description = description;
         this.attractedToGender = attractedToGender;

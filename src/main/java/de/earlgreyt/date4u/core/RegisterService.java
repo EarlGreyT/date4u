@@ -6,6 +6,7 @@ import de.earlgreyt.date4u.core.exceptions.EmailAlreadyInUseException;
 import de.earlgreyt.date4u.core.formdata.UserDTO;
 import de.earlgreyt.date4u.repositories.ProfileRepository;
 import de.earlgreyt.date4u.repositories.UnicornRepository;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +31,7 @@ public class RegisterService {
         this.profileRepository = profileRepository;
         this.passwordEncoder = passwordEncoder;
     }
+    @Transactional
     public void register(UserDTO userDTO)throws EmailAlreadyInUseException {
         if (unicornRepository.findByEmail(userDTO.getEmail()).isPresent()){
             throw new EmailAlreadyInUseException();
@@ -38,8 +40,9 @@ public class RegisterService {
         unicorn.setEmail(userDTO.getEmail());
         unicorn.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         Profile profile = new Profile(userDTO.getNickname(), LocalDate.now(),0,0,null,"", LocalDateTime.now());
-        profile.setUnicorn(unicorn);
         profileRepository.save(profile);
+        unicorn.setProfile(profile);
+        unicornRepository.save(unicorn);
     }
 }
 

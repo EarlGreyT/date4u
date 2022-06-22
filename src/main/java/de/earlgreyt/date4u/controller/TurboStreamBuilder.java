@@ -1,7 +1,6 @@
 package de.earlgreyt.date4u.controller;
 
 import java.util.Map;
-import java.util.Map.Entry;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
