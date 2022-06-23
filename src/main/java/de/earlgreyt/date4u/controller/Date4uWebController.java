@@ -225,7 +225,6 @@ public class Date4uWebController {
     matches.removeIf(p -> p.getEmail().equals(unicornDetails.getUsername()));
     model.addAttribute("lastSearch", matches);
     model.addAttribute("searchData", searchData);
-    model.addAttribute("pageNo", 1);
     model.addAttribute("profile", profileFormData);
     return "search/search";
   }
