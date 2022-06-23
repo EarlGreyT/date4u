@@ -4,7 +4,7 @@ import de.earlgreyt.date4u.core.PhotoService;
 import de.earlgreyt.date4u.core.ProfileService;
 import de.earlgreyt.date4u.core.RegisterService;
 import de.earlgreyt.date4u.core.TurboStreamBuilder;
-import de.earlgreyt.date4u.core.entitybeans.Photo;
+
 import de.earlgreyt.date4u.core.exceptions.EmailAlreadyInUseException;
 import de.earlgreyt.date4u.core.formdata.ProfileFormData;
 import de.earlgreyt.date4u.core.UnicornDetailService;
@@ -15,8 +15,7 @@ import de.earlgreyt.date4u.core.formdata.UserDTO;
 import de.earlgreyt.date4u.repositories.search.SearchCriteria;
 import de.earlgreyt.date4u.repositories.search.SearchOperation;
 import java.io.IOException;
-import java.time.LocalDate;
-import javax.servlet.http.HttpServletRequest;
+
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import org.slf4j.Logger;
