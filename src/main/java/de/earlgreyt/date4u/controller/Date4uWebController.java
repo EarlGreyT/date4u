@@ -117,7 +117,7 @@ public class Date4uWebController {
   }
 
   @RequestMapping("/unicorn/{nickname}")
-  public String profilePage(Model model, Principal principal, @PathVariable String nickname, HttpServletRequest request) {
+  public String profilePage(Model model, Principal principal, @PathVariable String nickname) {
     UnicornDetails unicornDetails = (UnicornDetails) unicornDetailService.loadUserByUsername(
         principal.getName());
     Optional<ProfileFormData> optionalProfileFormData = profileService.findProfileByNickname(nickname);
