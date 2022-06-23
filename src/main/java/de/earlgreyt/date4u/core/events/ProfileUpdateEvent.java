@@ -5,8 +5,8 @@ import java.util.Set;
 import org.springframework.context.ApplicationEvent;
 
 public class ProfileUpdateEvent extends ApplicationEvent {
-    private ProfileFormData profileFormData;
-    private Set<String> targets;
+    private final ProfileFormData profileFormData;
+    private final Set<String> targets;
     public ProfileUpdateEvent(Object source, ProfileFormData profileFormData, Set<String> targets) {
         super(source);
         this.profileFormData = profileFormData;

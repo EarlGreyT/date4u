@@ -1,0 +1,26 @@
+<sideBar th:fragment="sidebar()" class="container grid fixed grid-cols-1 auto-rows-min mx-auto gap-y-1 left-5 top-[25%] text-3xl w-1/12">
+  <a href="/matches" data-turbo-frame="content" data-turbo-action="replace">
+    <div class="sidebar-icon group">
+      <i class="bi bi-arrow-through-heart"></i>
+      <span class="sidebar-tooltip group-hover:scale-100 z-40">Matching Unicorns</span>
+    </div>
+  </a>
+  <a href="/profile" data-turbo-frame="content" data-turbo-action="replace">
+    <div class="sidebar-icon group">
+      <i class="bi bi-journal-richtext"></i>
+      <span class="sidebar-tooltip group-hover:scale-100">Profile</span>
+    </div>
+  </a>
+  <a href="/search" data-turbo-frame="content" data-turbo-action="replace">
+    <div class="sidebar-icon group ">
+      <i class="bi bi-search-heart"></i>
+      <span class="sidebar-tooltip group-hover:scale-100 z-40">Search Unicorns</span>
+    </div>
+  </a>
+  <a href="/logout" data-turbo-frame="_top" data-turbo-action="replace">
+    <div class="sidebar-icon group">
+      <i class="bi bi-door-open"></i>
+      <span class="sidebar-tooltip group-hover:scale-100 z-40">Logout, but why?</span>
+    </div>
+  </a>
+</sideBar>

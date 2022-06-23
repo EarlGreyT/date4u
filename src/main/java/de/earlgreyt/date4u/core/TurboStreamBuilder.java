@@ -1,6 +1,7 @@
 package de.earlgreyt.date4u.core;
 
 import java.util.Map;
+import java.util.StringJoiner;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -18,5 +19,14 @@ public class TurboStreamBuilder {
     String targetString = templateEngine.process(templateHTML,context).trim();
     targetString ="<turbo-stream target=\""+target+"\" action=\""+action+"\"><template>"+targetString+"</template></turbo-stream>".trim();
     return  targetString.replace("\n","").replace("\r","").trim();
+  }
+
+  public String buildRemoveChildTurboStream(String[] targetSelectors) {
+    StringJoiner targets = new StringJoiner(">");
+    for (String targetSelector : targetSelectors) {
+      targets.add(targetSelector);
+    }
+    String removeStream = "<turbo-stream targets=\""+targets.toString()+"\" action=\"remove\"></turbo-stream>".trim();
+    return removeStream;
   }
 }

@@ -59,20 +59,5 @@ public class PhotoRestController {
         }
         return photo;
     }
-    @PostMapping("/uploadPhoto")
-    public String uploadPhoto(Principal principal, @RequestParam("image") MultipartFile multipartFile) throws IOException {
-        UnicornDetails unicornDetails = (UnicornDetails) unicornDetailService.loadUserByUsername(principal.getName());
-        if (unicornDetails.getProfile().isPresent()) {
-            String filename = photoService.upload(multipartFile.getBytes());
-            Profile profile = unicornDetails.getProfile().get();
-            Photo photo = new Photo(filename);
-            photo.setName(filename);
-            photo.setProfile(profile);
-            photo.setProfilePhoto(false);
-            profile.addPhoto(photo);
-            profileRepository.save(profile);
-        }
 
-        return "redirect:/profile/";
-    }
 }

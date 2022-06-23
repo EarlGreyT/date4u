@@ -36,9 +36,9 @@ public class ProfileSpec implements Specification<Profile> {
             criteria.getValue().toString().toLowerCase() + "%"));
         case MATCH_START -> predicateList.add(criteriaBuilder.like(criteriaBuilder.lower(root.get(criteria.getKey())),
             "%" + criteria.getValue().toString().toLowerCase()));
-        case BEFORE_NOW -> predicateList.add(criteriaBuilder.between(root.get(criteria.getKey()),LocalDate.now().minusYears(
+        case YEARS_BEFORE_NOW -> predicateList.add(criteriaBuilder.between(root.get(criteria.getKey()),LocalDate.now().minusYears(
             (Integer) criteria.getValue()),LocalDate.now()));
-        case NOT_BEFORE_NOW -> predicateList.add(criteriaBuilder.not(criteriaBuilder.between(root.get(criteria.getKey()),LocalDate.now().minusYears(
+        case NOT_YEARS_BEFORE_NOW -> predicateList.add(criteriaBuilder.not(criteriaBuilder.between(root.get(criteria.getKey()),LocalDate.now().minusYears(
             (Integer) criteria.getValue()),LocalDate.now())));
       }
     }

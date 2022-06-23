@@ -7,7 +7,5 @@ import java.util.Optional;
 
 public interface UnicornRepository extends JpaRepository<Unicorn, Long> {
     boolean existsByEmail(String email);
-
-
     Optional<Unicorn> findByEmail(String email);
 }

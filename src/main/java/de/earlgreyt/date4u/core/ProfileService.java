@@ -1,6 +1,8 @@
 package de.earlgreyt.date4u.core;
 
 
+import de.earlgreyt.date4u.core.entitybeans.Photo;
+import de.earlgreyt.date4u.core.events.DisLikeEvent;
 import de.earlgreyt.date4u.core.events.LikeEvent;
 import de.earlgreyt.date4u.core.events.ProfileUpdateEvent;
 import de.earlgreyt.date4u.core.entitybeans.Profile;
@@ -25,35 +27,46 @@ public class ProfileService {
     this.profileRepository = profileRepository;
     this.applicationEventPublisher = applicationEventPublisher;
   }
+
   public ProfileFormData getProfileFormData(UnicornDetails unicornDetails) {
     Profile profile = unicornDetails.getProfile().get();
     return new ProfileFormData(profile);
 
   }
 
-  public void addLike(String nickname, UnicornDetails unicornDetails){
+  public boolean userLikesUnicorn(UnicornDetails unicornDetails, String nickname) {
+    Optional<Profile> unicorn = unicornDetails.getProfile();
+    if (unicorn.isPresent()) {
+      Profile profile = unicorn.get();
+      return profile.getProfilesILike().stream().anyMatch(p -> p.getNickname().equals(nickname));
+    }
+    return false;
+  }
+
+  public void addLike(String nickname, UnicornDetails unicornDetails) {
     Profile unicorn = unicornDetails.getProfile().get();
     boolean[] sendEvent = {false};
 
-    profileRepository.findProfileByNickname(nickname).ifPresent( profile -> {
-      boolean added= unicorn.getProfilesILike().add(profile);
-      if (profile.getProfilesILike().contains(unicorn)){
-        sendEvent[0]=added;
+    profileRepository.findProfileByNickname(nickname).ifPresent(profile -> {
+      boolean added = unicorn.getProfilesILike().add(profile);
+      if (profile.getProfilesILike().contains(unicorn) && added) {
+        applicationEventPublisher.publishEvent(new LikeEvent(this, unicorn, profile));
       }
     });
     profileRepository.save(unicorn);
-    if (sendEvent[0]){
-      applicationEventPublisher.publishEvent(new LikeEvent(this,unicorn,profileRepository.findProfileByNickname(nickname).get()));
-    }
+
   }
 
-  public void removeLike(String nickname, UnicornDetails unicornDetails){
+  public void removeLike(String nickname, UnicornDetails unicornDetails) {
     Profile unicorn = unicornDetails.getProfile().get();
-    profileRepository.findProfileByNickname(nickname).ifPresent( profile -> {
+    profileRepository.findProfileByNickname(nickname).ifPresent(profile -> {
       unicorn.getProfilesILike().remove(profile);
+      applicationEventPublisher.publishEvent(new DisLikeEvent(this, unicorn, profile));
     });
     profileRepository.save(unicorn);
+
   }
+
   public Optional<ProfileFormData> findProfileByNickname(String nickname) {
     ProfileFormData profileFormData = null;
     Optional<Profile> profile = profileRepository.findProfileByNickname(nickname);
@@ -77,7 +90,8 @@ public class ProfileService {
       Set<Profile> profileSet = new HashSet<>(profile.getProfilesILike());
       profile.getProfilesThatLikeMe().forEach(
           likerProfile -> targets.add(likerProfile.getUnicorn().getEmail()));
-      ProfileUpdateEvent profileUpdateEvent = new ProfileUpdateEvent(this, profileFormData, targets);
+      ProfileUpdateEvent profileUpdateEvent = new ProfileUpdateEvent(this, profileFormData,
+          targets);
       applicationEventPublisher.publishEvent(profileUpdateEvent);
     });
   }
@@ -94,14 +108,26 @@ public class ProfileService {
     return profileFormDataSet;
   }
 
-  public Set<ProfileFormData> searchProfile(SearchCriteria... constraints){
+  public Set<ProfileFormData> searchProfile(SearchCriteria... constraints) {
     ProfileSpec profileSpec = new ProfileSpec();
     Set<ProfileFormData> profileFormDataList = new HashSet<>();
     for (SearchCriteria constraint : constraints) {
       profileSpec.addCriteria(constraint);
     }
-    profileRepository.findAll(profileSpec).forEach(profile -> profileFormDataList.add(new ProfileFormData(profile)));
+    profileRepository.findAll(profileSpec)
+        .forEach(profile -> profileFormDataList.add(new ProfileFormData(profile)));
     return profileFormDataList;
+  }
+
+  public void addPhoto(UnicornDetails unicornDetails, String filename) {
+    unicornDetails.getProfile().ifPresent(profile -> {
+      Photo photo = new Photo(filename);
+      photo.setName(filename);
+      photo.setProfile(profile);
+      photo.setProfilePhoto(false);
+      profile.addPhoto(photo);
+      profileRepository.save(profile);
+    });
   }
 }
 

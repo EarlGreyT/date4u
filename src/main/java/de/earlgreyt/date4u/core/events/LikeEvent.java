@@ -4,8 +4,8 @@ import de.earlgreyt.date4u.core.entitybeans.Profile;
 import org.springframework.context.ApplicationEvent;
 
 public class LikeEvent extends ApplicationEvent {
-  private Profile liker;
-  private Profile likee;
+  private final Profile liker;
+  private final Profile likee;
   public LikeEvent(Object source, Profile liker, Profile likee) {
     super(source);
     this.liker = liker;

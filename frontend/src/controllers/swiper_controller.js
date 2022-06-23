@@ -17,7 +17,17 @@ export default class extends Controller {
             slidesPerView: this.perviewValue,
             spaceBetween: this.spacebetweenValue,
             loop: this.loopValue,
-
+            breakpoints: {
+              '1400':{
+                slidesPerView: this.perviewValue
+              },
+              '1000':{
+                slidesPerView: Math.min(Math.ceil(this.perviewValue/2),2)
+              },
+              '1':{
+                slidesPerView: 1
+              }
+            },
             hashNavigation: {
                 watchState: true,
             },

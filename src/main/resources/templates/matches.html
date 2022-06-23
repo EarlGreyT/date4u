@@ -8,32 +8,7 @@
     <script th:src="@{/js/bundle.js}" defer></script>
 </head>
 <body class="grid bg-gradient-to-r from-indigo-500 via-violet-500 via-purple-500 via-fuchsia-500 to-red-500">
-<sideBar class="container grid fixed grid-cols-1 auto-rows-min mx-auto gap-y-1 left-5 top-[25%] text-3xl w-1/12">
-    <a href="/matches" data-turbo-frame="content" data-turbo-action="replace">
-        <div class="sidebar-icon group">
-            <i class="bi bi-arrow-through-heart"></i>
-            <span class="sidebar-tooltip group-hover:scale-100 z-40">Matching Unicorns</span>
-        </div>
-    </a>
-    <a href="/profile" data-turbo-frame="content" data-turbo-action="replace">
-        <div class="sidebar-icon group">
-            <i class="bi bi-journal-richtext"></i>
-            <span class="sidebar-tooltip group-hover:scale-100">Profile</span>
-        </div>
-    </a>
-    <a href="/search" data-turbo-frame="content" data-turbo-action="replace">
-        <div class="sidebar-icon group ">
-            <i class="bi bi-search-heart"></i>
-            <span class="sidebar-tooltip group-hover:scale-100 z-40">Search Unicorns</span>
-        </div>
-    </a>
-    <a href="/logout" data-turbo-frame="_top" data-turbo-action="replace">
-        <div class="sidebar-icon group">
-            <i class="bi bi-door-open"></i>
-            <span class="sidebar-tooltip group-hover:scale-100 z-40">Logout, but why?</span>
-        </div>
-    </a>
-</sideBar>
+<div th:replace="sidebar :: sidebar()"></div>
 <main class="grid grid-cols-12 grid-flow-col-dense grid-auto-cols-min py-20 mx-36  px-20 gap-2">
     <div class="flex flex-row flex-wrap col-span-full gap-2" id="matchesList">
     <th:block th:each="likedProfile: ${likedProfiles}">

@@ -19,7 +19,6 @@ public class Photo {
     @JoinColumn( name = "profile_fk" )
     @JsonBackReference
     private Profile profile;
-    @Pattern(regexp = "(\\w){1,200}")
     private String name;
 
     @Column( name = "is_profile_photo" )
@@ -32,6 +31,8 @@ public class Photo {
 
     public Photo(String name) {
         this.name = name;
+        this.created = LocalDateTime.now();
+
     }
 
 

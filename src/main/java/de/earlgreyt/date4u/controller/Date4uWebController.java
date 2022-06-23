@@ -1,8 +1,10 @@
 package de.earlgreyt.date4u.controller;
 
+import de.earlgreyt.date4u.core.PhotoService;
 import de.earlgreyt.date4u.core.ProfileService;
 import de.earlgreyt.date4u.core.RegisterService;
 import de.earlgreyt.date4u.core.TurboStreamBuilder;
+import de.earlgreyt.date4u.core.entitybeans.Photo;
 import de.earlgreyt.date4u.core.exceptions.EmailAlreadyInUseException;
 import de.earlgreyt.date4u.core.formdata.ProfileFormData;
 import de.earlgreyt.date4u.core.UnicornDetailService;
@@ -12,29 +14,24 @@ import de.earlgreyt.date4u.core.formdata.SearchData;
 import de.earlgreyt.date4u.core.formdata.UserDTO;
 import de.earlgreyt.date4u.repositories.search.SearchCriteria;
 import de.earlgreyt.date4u.repositories.search.SearchOperation;
+import java.io.IOException;
 import java.time.LocalDate;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import javax.validation.Valid;
-import javax.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-import org.springframework.boot.context.properties.bind.validation.BindValidationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
 import java.security.Principal;
 import java.util.*;
-import org.springframework.web.bind.support.WebExchangeBindException;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @Validated
@@ -44,16 +41,18 @@ public class Date4uWebController {
   private final ProfileService profileService;
   private final TurboStreamBuilder turboStreamBuilder;
   private final RegisterService registerService;
+  private final PhotoService photoService;
 
   public Date4uWebController(
       UnicornDetailService unicornDetailService,
       ProfileService profileService,
       TurboStreamBuilder turboStreamBuilder,
-      RegisterService registerService) {
+      RegisterService registerService, PhotoService photoService) {
     this.unicornDetailService = unicornDetailService;
     this.profileService = profileService;
     this.turboStreamBuilder = turboStreamBuilder;
     this.registerService = registerService;
+    this.photoService = photoService;
   }
 
   @RequestMapping("/*")
@@ -104,7 +103,7 @@ public class Date4uWebController {
         if (constraintViolation.getPropertyPath().toString().contains("nickname")) {
           errorMap.put("nickname", constraintViolation.getMessage());
         } else if(constraintViolation.getPropertyPath().toString().contains("email")){
-          errorMap.put("nickname", constraintViolation.getMessage());
+          errorMap.put("email", constraintViolation.getMessage());
         } else {
           errorMap.put("password", constraintViolation.getMessage());
         }
@@ -118,14 +117,17 @@ public class Date4uWebController {
   }
 
   @RequestMapping("/unicorn/{nickname}")
-  public String profilePage(Model model, Principal principal, @PathVariable String nickname) {
+  public String profilePage(Model model, Principal principal, @PathVariable String nickname, HttpServletRequest request) {
     UnicornDetails unicornDetails = (UnicornDetails) unicornDetailService.loadUserByUsername(
         principal.getName());
-    ProfileFormData profileFormData = profileService.findProfileByNickname(nickname).get();
-    model.addAttribute("profile", profileFormData);
-    model.addAttribute("likes", unicornDetails.getProfile().get().getProfilesILike().stream()
-        .anyMatch(profile -> profile.getNickname().equals(nickname)));
-    return "unicorn";
+    Optional<ProfileFormData> optionalProfileFormData = profileService.findProfileByNickname(nickname);
+    if (optionalProfileFormData.isPresent()) {
+      ProfileFormData profileFormData = optionalProfileFormData.get();
+      model.addAttribute("profile", profileFormData);
+      model.addAttribute("likes", profileService.userLikesUnicorn(unicornDetails, nickname));
+      return "unicorn";
+    }
+    return "index";
   }
 
   @PostMapping("/unicorn/{nickname}")
@@ -212,11 +214,11 @@ public class Date4uWebController {
     if (searchData.isConsiderMinAge()) {
       criteriaList.add(new SearchCriteria("birthdate",
           searchData.getMinAge(),
-          SearchOperation.NOT_BEFORE_NOW)); //Time Travelers from the future are fair game, no way to tell their age
+          SearchOperation.NOT_YEARS_BEFORE_NOW)); //Time Travelers from the future are fair game, no way to tell their age
     }
     if (searchData.isConsiderMaxAge()) {
       criteriaList.add(new SearchCriteria("birthdate",
-          searchData.getMaxAge(), SearchOperation.BEFORE_NOW));
+          searchData.getMaxAge(), SearchOperation.YEARS_BEFORE_NOW));
     }
     System.out.println("STUPID MIN AGE! " + LocalDate.now().minusYears(
         searchData.getMinAge()));
@@ -230,5 +232,14 @@ public class Date4uWebController {
     model.addAttribute("pageNo", 1);
     model.addAttribute("profile", profileFormData);
     return "search/search";
+  }
+  @PostMapping("/uploadPhoto")
+  public String uploadPhoto(Principal principal, @RequestParam("image") MultipartFile multipartFile) throws IOException {
+    UnicornDetails unicornDetails = (UnicornDetails) unicornDetailService.loadUserByUsername(principal.getName());
+    if (unicornDetails.getProfile().isPresent()) {
+      String filename = photoService.upload(multipartFile.getBytes());
+      profileService.addPhoto(unicornDetails, filename);
+    }
+    return "redirect:/profile";
   }
 }

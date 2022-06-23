@@ -12,6 +12,6 @@ public enum SearchOperation {
   MATCH_END,
   IN,
   NOT_IN,
-  BEFORE_NOW,
-  NOT_BEFORE_NOW
+  YEARS_BEFORE_NOW,
+  NOT_YEARS_BEFORE_NOW
 }

@@ -1,6 +1,7 @@
 package de.earlgreyt.date4u.controller;
 
 import de.earlgreyt.date4u.core.TurboStreamBuilder;
+import de.earlgreyt.date4u.core.events.DisLikeEvent;
 import de.earlgreyt.date4u.core.events.LikeEvent;
 import de.earlgreyt.date4u.core.events.ProfileUpdateEvent;
 import de.earlgreyt.date4u.core.entitybeans.Profile;
@@ -32,7 +33,7 @@ public class SSEController {
   @GetMapping(path = "/turbo-sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
   public SseEmitter handle(Principal principal) {
     if (emitterList.get(principal.getName()) == null) {
-      SseEmitter emitter = new SseEmitter(-1L); //super ugly but it works, no more 503s
+      SseEmitter emitter = new SseEmitter(-1L); // super ugly but it works, no more 503s
       emitter.onCompletion(() -> emitterList.remove(principal.getName()));
       emitter.onTimeout(() -> emitterList.remove(principal.getName()));//is this necessary?
       emitterList.put(principal.getName(), emitter);
@@ -49,7 +50,6 @@ public class SSEController {
       SseEmitter sseEmitter = emitterList.get(target);
       if (sseEmitter != null) {
         sseEmitter.send(createProfileCardHtml(profileFormData));
-        System.out.println("STUPID UPDATE EVENT FOR " + target);
       }
 
     }
@@ -62,12 +62,23 @@ public class SSEController {
     Profile likee = likeEvent.getLikee();
     SseEmitter likerEmitter = emitterList.get(liker.getUnicorn().getEmail());
     SseEmitter likeeEmitter = emitterList.get(likee.getUnicorn().getEmail());
-    if (likeeEmitter != null && likeeEmitter != null) {
+    if (likeeEmitter != null && likerEmitter != null) {
       likerEmitter.send(appendProfileCardHtml(new ProfileFormData(likee)));
       likeeEmitter.send(appendProfileCardHtml(new ProfileFormData(liker)));
     }
   }
+  @EventListener
+  @Async
+  public void handleDisLikeEvent(DisLikeEvent disLikeEvent) throws IOException{
+    Profile disliker = disLikeEvent.getDisliker();
+    Profile target = disLikeEvent.getTarget();
+      String[] targetSelectors = {"#matchesList", "#profCard_"+disliker.getNickname()};
+      SseEmitter targetEmitter = emitterList.get(target.getUnicorn().getEmail());
+      if (targetEmitter != null) {
+        targetEmitter.send(turboStreamBuilder.buildRemoveChildTurboStream(targetSelectors));
+      }
 
+  }
   private String appendProfileCardHtml(ProfileFormData profileFormData) {
     Map<String, Object> objectMap = new HashMap<>();
     objectMap.put("nickname", profileFormData.getNickname());
