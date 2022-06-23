@@ -198,7 +198,7 @@ public class Date4uWebController {
     ProfileFormData profileFormData = profileService.getProfileFormData(unicornDetails);
     if (!profileFormData.getAttractedToGender().equals("All")) {
       criteriaList.add(new SearchCriteria("gender",
-          Profile.genderNameToGender(profileFormData.getAttractedToGender()),
+          ProfileFormData.genderNameToGender(profileFormData.getAttractedToGender()),
           SearchOperation.EQUAL));
     }
     if (searchData.isConsiderMinSize()) {

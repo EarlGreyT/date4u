@@ -82,9 +82,9 @@ public class ProfileService {
       profile.setProfilePic(profileFormData.getProfilePhotoName());
       profile.setBirthdate(profileFormData.getBirthdate());
       profile.setDescription(profileFormData.getDescription());
-      profile.setGender(profileFormData.getGender());
+      profile.setGender((ProfileFormData.genderNameToGender(profileFormData.getGender())));
       profile.setHornlength(profileFormData.getHornlength());
-      profile.setAttractedToGender(profileFormData.getAttractedToGender());
+      profile.setAttractedToGender(ProfileFormData.genderNameToGender(profileFormData.getAttractedToGender()));
       profileRepository.save(profile);
       Set<String> targets = new HashSet<>();
       Set<Profile> profileSet = new HashSet<>(profile.getProfilesILike());

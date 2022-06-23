@@ -39,7 +39,7 @@ public class ProfileFormData {
     }
 
     public ProfileFormData(Profile profile) {
-        this(profile.getNickname(), profile.getHornlength(), profile.getGenderName(), profile.getProfilePic(), profile.getBirthdate(), profile.getDescription(), profile.getPhotos(), profile.getUnicorn().getEmail(), profile.getAttractedToGenderName());
+        this(profile.getNickname(), profile.getHornlength(), genderToGenderName(profile.getGender()), profile.getProfilePic(), profile.getBirthdate(), profile.getDescription(), profile.getPhotos(), profile.getUnicorn().getEmail(), genderToGenderName(profile.getAttractedToGender()));
     }
 
     public ProfileFormData(String nickname, int hornlength, String gender, Optional<Photo> profilePhoto, LocalDate birthdate, String description, List<Photo> photos, String email, String attractedToGender) {
@@ -151,6 +151,39 @@ public class ProfileFormData {
             that.getPhotos())
             && getEmail().equals(that.getEmail()) && getAttractedToGender().equals(
             that.getAttractedToGender());
+    }
+
+
+
+
+
+
+    public static byte genderNameToGender(String genderName) {
+        switch (genderName) {
+            case "Female" -> {
+                return 1;
+            }
+            case "Male" -> {
+                return 2;
+            }
+            default -> {
+                return 3;
+            }
+        }
+    }
+
+    public static String genderToGenderName(int gender) {
+        switch (gender) {
+            case 1 -> {
+                return "Female";
+            }
+            case 2 -> {
+                return "Male";
+            }
+            default -> {
+                return "Non-Binary";
+            }
+        }
     }
 
     @Override
