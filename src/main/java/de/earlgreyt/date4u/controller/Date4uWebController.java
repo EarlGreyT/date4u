@@ -220,10 +220,6 @@ public class Date4uWebController {
       criteriaList.add(new SearchCriteria("birthdate",
           searchData.getMaxAge(), SearchOperation.YEARS_BEFORE_NOW));
     }
-    System.out.println("STUPID MIN AGE! " + LocalDate.now().minusYears(
-        searchData.getMinAge()));
-    System.out.println("STUPID MAX AGE! " + LocalDate.now().minusYears(
-        searchData.getMaxAge()));
     Set<ProfileFormData> matches = profileService.searchProfile(
         criteriaList.toArray(new SearchCriteria[0]));
     matches.removeIf(p -> p.getEmail().equals(unicornDetails.getUsername()));
