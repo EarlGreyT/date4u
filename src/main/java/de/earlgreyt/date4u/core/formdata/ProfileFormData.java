@@ -2,6 +2,7 @@ package de.earlgreyt.date4u.core.formdata;
 
 import de.earlgreyt.date4u.core.entitybeans.Photo;
 import de.earlgreyt.date4u.core.entitybeans.Profile;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,7 +23,7 @@ public class ProfileFormData {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthdate;
     private String description;
-    private LinkedList<String> photos = new LinkedList<>();
+    private List<String> photos = new ArrayList<>();
     private String email;
     private String attractedToGender;
     public ProfileFormData() {
@@ -91,7 +92,7 @@ public class ProfileFormData {
         this.gender = gender;
     }
 
-    public LinkedList<String> getPhotos() {
+    public List<String> getPhotos() {
         return photos;
     }
 
@@ -111,7 +112,7 @@ public class ProfileFormData {
         this.description = description;
     }
 
-    public void setPhotos(LinkedList<String> photos) {
+    public void setPhotos(List<String> photos) {
         this.photos = photos;
     }
 
