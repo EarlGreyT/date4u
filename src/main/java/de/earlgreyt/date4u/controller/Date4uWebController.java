@@ -131,7 +131,7 @@ public class Date4uWebController {
   }
 
   @PostMapping("/unicorn/{nickname}")
-  public String likeProfilePage(Model model, Principal principal, @PathVariable String nickname) {
+  public String likeProfilePage(Principal principal, @PathVariable String nickname) {
     UnicornDetails unicornDetails = (UnicornDetails) unicornDetailService.loadUserByUsername(
         principal.getName());
     profileService.addLike(nickname, unicornDetails);
