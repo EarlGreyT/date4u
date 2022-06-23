@@ -187,7 +187,6 @@ public class Date4uWebController {
         (UnicornDetails) unicornDetailService.loadUserByUsername(principal.getName()));
     SearchData searchData = new SearchData(0, 0, 18, 200, false, false, false, false);
     model.addAttribute("searchData", searchData);
-    model.addAttribute("pageNo", 0);
     model.addAttribute("profile", profile);
     return "search/search";
   }
@@ -225,7 +224,6 @@ public class Date4uWebController {
     matches.removeIf(p -> p.getEmail().equals(unicornDetails.getUsername()));
     model.addAttribute("lastSearch", matches);
     model.addAttribute("searchData", searchData);
-    model.addAttribute("pageNo", 1);
     model.addAttribute("profile", profileFormData);
     return "search/search";
   }
