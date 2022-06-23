@@ -20,10 +20,7 @@ public class UnicornDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Unicorn> unicorn = unicornRepository.findByEmail(username);
-        if (unicorn.isEmpty()) {
-           throw new UsernameNotFoundException("cant find a user with the given name");
-        }
-        return new UnicornDetails(unicorn.get());
+        Unicorn unicorn = unicornRepository.findByEmail(username).orElseThrow(() ->new UsernameNotFoundException("cant find a user with the given name"));
+        return new UnicornDetails(unicorn);
     }
 }
