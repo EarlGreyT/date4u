@@ -3,7 +3,7 @@
              th:id="|profCard_${nickname}|"
              class="flex flex-col flex-initial rounded-xl overflow-clip bg-gray-800/40 mx-2 w-full max-w-[265px] shadow-sm relative group " loading="lazy">
     <div class="flex flex-col">
-    <a data-turbo-frame="_top" data-turbo-action="advance" th:href="|/unicorn/${nickname}|" ><img class="object-fill"
+    <a data-turbo-frame="_top" data-turbo-action="advance" th:href="|/unicorn/${nickname}|" ><img class="object-cover"
                       th:src="|/api/thumb/${profilePhotoName}|" lazy="true"></a>
         <div class="rounded-md border-none outline-none p-1">
             <div

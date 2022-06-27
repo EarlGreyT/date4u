@@ -10,9 +10,11 @@ import de.earlgreyt.date4u.core.formdata.ProfileFormData;
 import de.earlgreyt.date4u.repositories.ProfileRepository;
 import de.earlgreyt.date4u.repositories.search.ProfileSpec;
 import de.earlgreyt.date4u.repositories.search.SearchCriteria;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import javax.transaction.Transactional;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
@@ -44,26 +46,27 @@ public class ProfileService {
   }
 
   public void addLike(String nickname, UnicornDetails unicornDetails) {
-    Profile unicorn = unicornDetails.getProfile().get();
-    boolean[] sendEvent = {false};
-
-    profileRepository.findProfileByNickname(nickname).ifPresent(profile -> {
-      boolean added = unicorn.getProfilesILike().add(profile);
-      if (profile.getProfilesILike().contains(unicorn) && added) {
-        applicationEventPublisher.publishEvent(new LikeEvent(this, unicorn, profile));
-      }
+    unicornDetails.getProfile().ifPresent(unicorn -> {
+      profileRepository.findProfileByNickname(nickname).ifPresent(profile -> {
+        boolean added = unicorn.getProfilesILike().add(profile);
+        if (profile.getProfilesILike().contains(unicorn) && added) {
+          applicationEventPublisher.publishEvent(new LikeEvent(this, unicorn, profile));
+        }
+      });
+      unicorn.setLastseen(LocalDateTime.now());
+      profileRepository.save(unicorn);
     });
-    profileRepository.save(unicorn);
-
   }
 
   public void removeLike(String nickname, UnicornDetails unicornDetails) {
-    Profile unicorn = unicornDetails.getProfile().get();
-    profileRepository.findProfileByNickname(nickname).ifPresent(profile -> {
-      unicorn.getProfilesILike().remove(profile);
-      applicationEventPublisher.publishEvent(new DisLikeEvent(this, unicorn, profile));
+    unicornDetails.getProfile().ifPresent(unicorn -> {
+      profileRepository.findProfileByNickname(nickname).ifPresent(profile -> {
+        unicorn.getProfilesILike().remove(profile);
+        applicationEventPublisher.publishEvent(new DisLikeEvent(this, unicorn, profile));
+      });
+      unicorn.setLastseen(LocalDateTime.now());
+      profileRepository.save(unicorn);
     });
-    profileRepository.save(unicorn);
 
   }
 
@@ -84,10 +87,11 @@ public class ProfileService {
       profile.setDescription(profileFormData.getDescription());
       profile.setGender((ProfileFormData.genderNameToGender(profileFormData.getGender())));
       profile.setHornlength(profileFormData.getHornlength());
-      profile.setAttractedToGender(ProfileFormData.genderNameToGender(profileFormData.getAttractedToGender()));
+      profile.setAttractedToGender(
+          ProfileFormData.genderNameToGender(profileFormData.getAttractedToGender()));
+      profile.setLastseen(LocalDateTime.now());
       profileRepository.save(profile);
       Set<String> targets = new HashSet<>();
-      Set<Profile> profileSet = new HashSet<>(profile.getProfilesILike());
       profile.getProfilesThatLikeMe().forEach(
           likerProfile -> targets.add(likerProfile.getUnicorn().getEmail()));
       ProfileUpdateEvent profileUpdateEvent = new ProfileUpdateEvent(this, profileFormData,
@@ -114,8 +118,10 @@ public class ProfileService {
     for (SearchCriteria constraint : constraints) {
       profileSpec.addCriteria(constraint);
     }
+
     profileRepository.findAll(profileSpec)
         .forEach(profile -> profileFormDataList.add(new ProfileFormData(profile)));
+
     return profileFormDataList;
   }
 
@@ -128,6 +134,9 @@ public class ProfileService {
       profile.addPhoto(photo);
       profileRepository.save(profile);
     });
+  }
+  public void deleteProfile(UnicornDetails unicornDetails) {
+    unicornDetails.getProfile().ifPresent(profile ->  profileRepository.delete(unicornDetails.getProfile().get()));
   }
 }
 

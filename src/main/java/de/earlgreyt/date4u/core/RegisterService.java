@@ -6,24 +6,15 @@ import de.earlgreyt.date4u.core.exceptions.EmailAlreadyInUseException;
 import de.earlgreyt.date4u.core.formdata.UserDTO;
 import de.earlgreyt.date4u.repositories.ProfileRepository;
 import de.earlgreyt.date4u.repositories.UnicornRepository;
-import java.util.HashSet;
-import java.util.Set;
 import javax.transaction.Transactional;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.*;
-import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+
 import org.springframework.validation.annotation.Validated;
 
 @Service

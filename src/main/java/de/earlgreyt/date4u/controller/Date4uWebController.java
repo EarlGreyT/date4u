@@ -169,8 +169,16 @@ public class Date4uWebController {
     return "profile/profileEdit";
   }
 
+  @PostMapping("/nuke")
+  public String deleteProfilePage(Principal principal, Model model){
+    UnicornDetails unicornDetails = (UnicornDetails) unicornDetailService.loadUserByUsername(
+        principal.getName());
+    profileService.deleteProfile(unicornDetails);
+    return "redirect:/register";
+  }
 
-  private final Logger log = LoggerFactory.getLogger(getClass());
+
+
 
   @PostMapping("/save")
   public String saveProfile(@ModelAttribute ProfileFormData profile, Principal principal) {

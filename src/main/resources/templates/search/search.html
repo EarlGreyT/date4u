@@ -14,31 +14,31 @@
 <main class="grid grid-cols-12  gap-2 grid-flow-col-dense grid-auto-cols-min py-20 mx-36 px-20">
   <turbo-frame id="searchBar" class="col-span-full ">
     <form th:object="${searchData}" method="post" class="flex flex-row flex-wrap gap-2 "
-          th:action="|/search|" th:data-turbo-frame="|searchResult_${profile.nickname}|">
+          th:action="|/search|" data-turbo-frame="searchResult">
       <div class="rounded-xl overflow-clip bg-gray-800/30"><label for="minSizeInput"> mindest
         Hornlänge <input type="checkbox"
                          th:field="*{considerMinSize}"></label>
-        <input class="border-none" type="text" th:field="*{minSize}" id="minSizeInput">
+        <input class="border-none" type="text" th:field="*{minSize}"  th:placeholder="*{minSize}" id="minSizeInput" required>
       </div>
       <div class="rounded-xl overflow-clip bg-gray-800/30"><label for="maxSizeInput"> maximale
         Hornlänge <input type="checkbox"
                          th:field="*{considerMaxSize}"></label>
-        <input class="border-none" type="text" th:field="*{maxSize}" id="maxSizeInput"></div>
+        <input class="border-none" type="text" th:field="*{maxSize}" th:placeholder="*{maxSize}" id="maxSizeInput" required></div>
 
       <div class="rounded-xl overflow-clip bg-gray-800/30"><label for="minAgeInput"> mindest Alter
         <input type="checkbox"
                th:field="*{considerMinAge}"></label>
-        <input class="border-none"type="text" th:field="*{minAge}" id="minAgeInput">
+        <input class="border-none"type="text" th:field="*{minAge}"  th:placeholder="*{minAge}" id="minAgeInput" required>
       </div>
       <div class="rounded-xl overflow-clip bg-gray-800/30"><label for="maxAgeInput"> maximales Alter
         <input type="checkbox"
                th:field="*{considerMaxAge}"></label>
-        <input class="border-none" type="text" th:field="*{maxAge}" id="maxAgeInput"></div>
+        <input class="border-none" type="text" th:field="*{maxAge}" th:placeholder="*{maxAge}"  id="maxAgeInput" required></div>
 
       <button type="submit" class="app-button col-start-1 m-2">search!</button>
     </form>
   </turbo-frame>
-  <turbo-frame th:id="|searchResult_${profile.nickname}|"
+  <turbo-frame id="searchResult"
                class="col-span-full flex flex-row flex-wrap gap-2">
     <th:block th:each="likedProfile: ${lastSearch}">
       <div

@@ -1,18 +1,17 @@
 package de.earlgreyt.date4u.controller;
 
 import de.earlgreyt.date4u.core.PhotoService;
+import de.earlgreyt.date4u.core.ProfileService;
 import de.earlgreyt.date4u.core.UnicornDetailService;
 import de.earlgreyt.date4u.core.UnicornDetails;
-import de.earlgreyt.date4u.core.entitybeans.Photo;
-import de.earlgreyt.date4u.core.entitybeans.Profile;
 import de.earlgreyt.date4u.repositories.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
+import org.springframework.ui.Model;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,11 +23,14 @@ public class PhotoRestController {
     private final PhotoService photoService;
     private final UnicornDetailService unicornDetailService;
     private final ProfileRepository profileRepository;
+    private final ProfileService profileService;
     @Autowired
-    public PhotoRestController(PhotoService photoService, UnicornDetailService unicornDetailService, ProfileRepository profileRepository) {
+    public PhotoRestController(PhotoService photoService, UnicornDetailService unicornDetailService,
+        ProfileRepository profileRepository, ProfileService profileService) {
         this.photoService = photoService;
         this.unicornDetailService = unicornDetailService;
         this.profileRepository = profileRepository;
+        this.profileService = profileService;
     }
 
     @GetMapping( path     = "/api/photo/{photoName}",
@@ -59,5 +61,6 @@ public class PhotoRestController {
         }
         return photo;
     }
+
 
 }

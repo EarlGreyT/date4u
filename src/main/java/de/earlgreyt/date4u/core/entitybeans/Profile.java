@@ -51,8 +51,7 @@ public class Profile {
       CascadeType.DETACH,
       CascadeType.MERGE,
       CascadeType.REFRESH,
-      CascadeType.PERSIST
-  })
+      CascadeType.PERSIST})
   @JoinTable(
       name = "likes",
       joinColumns = @JoinColumn(name = "liker_fk"),
@@ -136,7 +135,7 @@ public class Profile {
 
   public @Nullable
   Integer getAttractedToGender() {
-    return attractedToGender == null ? null : attractedToGender.intValue();
+    return attractedToGender == null ? -1 : attractedToGender.intValue();
   }
 
   public void setAttractedToGender(@Nullable Integer attractedToGender) {

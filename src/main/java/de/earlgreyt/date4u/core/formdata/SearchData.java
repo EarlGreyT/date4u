@@ -16,6 +16,10 @@ public class SearchData {
   private boolean considerMaxAge;
 
   public SearchData() {
+    this.minSize = 0;
+    this.maxSize = 0;
+    this.minAge = 0;
+    this.maxAge = 0;
   }
 
   public SearchData(int minSize, int maxSize, int minAge, int maxAge, boolean considerMinSize,

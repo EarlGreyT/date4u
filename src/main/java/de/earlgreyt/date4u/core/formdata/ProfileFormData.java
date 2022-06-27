@@ -166,8 +166,11 @@ public class ProfileFormData {
             case "Male" -> {
                 return 2;
             }
+            case "Non-Binary" -> {
+                return 0;
+            }
             default -> {
-                return 3;
+                return -1;
             }
         }
     }
@@ -180,8 +183,11 @@ public class ProfileFormData {
             case 2 -> {
                 return "Male";
             }
-            default -> {
+            case 0 ->{
                 return "Non-Binary";
+            }
+            default -> {
+                return "All";
             }
         }
     }

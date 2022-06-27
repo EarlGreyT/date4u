@@ -38,4 +38,13 @@ public class SearchCriteria {
   public void setOperation(SearchOperation operation) {
     this.operation = operation;
   }
+
+  @Override
+  public String toString() {
+    return "SearchCriteria{" +
+        "key='" + key + '\'' +
+        ", value=" + value +
+        ", operation=" + operation +
+        '}';
+  }
 }
