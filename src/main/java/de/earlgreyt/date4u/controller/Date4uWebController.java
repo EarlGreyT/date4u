@@ -101,7 +101,7 @@ public class Date4uWebController {
       for (ConstraintViolation<?> constraintViolation : e.getConstraintViolations()) {
         if (constraintViolation.getPropertyPath().toString().contains("nickname")) {
           errorMap.put("nickname", constraintViolation.getMessage());
-        } else if(constraintViolation.getPropertyPath().toString().contains("email")){
+        } else if (constraintViolation.getPropertyPath().toString().contains("email")) {
           errorMap.put("email", constraintViolation.getMessage());
         } else {
           errorMap.put("password", constraintViolation.getMessage());
@@ -119,7 +119,8 @@ public class Date4uWebController {
   public String profilePage(Model model, Principal principal, @PathVariable String nickname) {
     UnicornDetails unicornDetails = (UnicornDetails) unicornDetailService.loadUserByUsername(
         principal.getName());
-    Optional<ProfileFormData> optionalProfileFormData = profileService.findProfileByNickname(nickname);
+    Optional<ProfileFormData> optionalProfileFormData = profileService.findProfileByNickname(
+        nickname);
     if (optionalProfileFormData.isPresent()) {
       ProfileFormData profileFormData = optionalProfileFormData.get();
       model.addAttribute("profile", profileFormData);
@@ -155,8 +156,16 @@ public class Date4uWebController {
     return "profile/profile";
   }
 
-  public String profileCardGen(Model model, ProfileFormData profileFormData) {
-    model.addAttribute("profile", profileFormData);
+  @GetMapping("/unicorn/card/{nickname}")
+  public String profileCardGen(Model model, @PathVariable String nickname) {
+    profileService.findProfileByNickname(nickname)
+        .ifPresent(profileFormData -> {
+          model.addAttribute("profilePhotoName", profileFormData.getProfilePhotoName());
+          model.addAttribute("nickname", profileFormData.getNickname());
+          model.addAttribute("gender", profileFormData.getGender());
+          model.addAttribute("birthdate", profileFormData.getBirthdate());
+          model.addAttribute("hornlength", profileFormData.getHornlength());
+        });
     return "profile/profileCard";
   }
 
@@ -170,14 +179,12 @@ public class Date4uWebController {
   }
 
   @PostMapping("/nuke")
-  public String deleteProfilePage(Principal principal, Model model){
+  public String deleteProfilePage(Principal principal, Model model) {
     UnicornDetails unicornDetails = (UnicornDetails) unicornDetailService.loadUserByUsername(
         principal.getName());
     profileService.deleteProfile(unicornDetails);
     return "redirect:/register";
   }
-
-
 
 
   @PostMapping("/save")
@@ -234,9 +241,12 @@ public class Date4uWebController {
     model.addAttribute("profile", profileFormData);
     return "search/search";
   }
+
   @PostMapping("/uploadPhoto")
-  public String uploadPhoto(Principal principal, @RequestParam("image") MultipartFile multipartFile) throws IOException {
-    UnicornDetails unicornDetails = (UnicornDetails) unicornDetailService.loadUserByUsername(principal.getName());
+  public String uploadPhoto(Principal principal, @RequestParam("image") MultipartFile multipartFile)
+      throws IOException {
+    UnicornDetails unicornDetails = (UnicornDetails) unicornDetailService.loadUserByUsername(
+        principal.getName());
     if (unicornDetails.getProfile().isPresent()) {
       String filename = photoService.upload(multipartFile.getBytes());
       profileService.addPhoto(unicornDetails, filename);
